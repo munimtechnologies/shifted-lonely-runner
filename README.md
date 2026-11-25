@@ -15,25 +15,24 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-25)
+## Status (2026-11-25, 09:00 UTC)
 
-- **Route 4 graded** (`RESULTS_br.md`): MV2's best-response search certified speeds 1..n
-  for n = 18, 19 and 20 in the repository's test gate, as pre-registered. These are **not
-  new**: counterexamples for 18..54 had been published three days earlier (link above),
-  which MV2's prior-work searches missed. They are an independent re-finding only.
-- **Route 5** (`PREREG_sbr.md`, `slr_sbr.py`): best response over speed and shift,
-  warm-started from the published n = 54 certificate, aimed at n = 55 and up; plus an
-  independent exact re-check of all 37 published certificates (`test_external_certs.py`).
-  No result yet.
-- Routes 1-3 (compete jobs) are still waiting for compute. Routes 2 and 3 search for small
-  Poliakova-type local rules; the 18..54 authors report an exhaustive search showing that
-  no gain-1 rule over the primes {2, 3} or {2, 3, 5} has L <= 190, so those jobs are
-  expected to find nothing in those menus.
-
-Prior work searched on 2026-11-24 and 2026-11-25 (arXiv "lonely runner" listing, newest
-first, 46 results, newest 2610.40694; web searches for the shifted conjecture and for
-counterexamples at n = 18..20; GitHub, including the code of Blanco, Criado and Santos and
-the 18..54 repository above).
+- **55 <= n <= 94 is still open.** Checked again on 2026-11-25 (~08:20 UTC): the 18..54
+  repository, its issue #110 (no activity after 2026-11-22), and arXiv's "lonely runner"
+  listing (newest 2610.40694) have nothing for n >= 55 below 95.
+- **Independent re-check of the published 18..54 certificates:** all 37 pass MV2's three
+  exact checkers, written separately from the authors' `verify.py` (`test_external_certs.py`,
+  commit c702698).
+- **Route 5 graded** (`RESULTS_sbr.md`): best response over speed and shift reached
+  E = 1/gamma - 56 = -0.257 at n = 55 (a counterexample needs E > 0). Not enough.
+- **Route 6** (`slr_lp.py`, `PREREG_lp.md`): a polish that moves all shifts at once.
+  Each hole's height changes by w (x_R - x_L) when runners' arcs move by x_i in time, so
+  lowering the highest hole is a system of difference constraints, solved by Bellman-Ford
+  with no LP library. Plus speed swaps and rigid time shifts. Three probes at n = 55.
+- Route 4 (`RESULTS_br.md`) certified n = 18, 19, 20; not new (see above).
+- Routes 1-3 (compete jobs) are still waiting for compute. The 18..54 authors report that no
+  gain-1 Poliakova-type rule over the primes {2, 3} or {2, 3, 5} has L <= 190, so routes 2
+  and 3 are expected to find nothing in those menus.
 
 ## What is here
 
@@ -45,14 +44,15 @@ the 18..54 repository above).
 | `rules.py`, `rule_search.py`, `test_rules.py`, `job_rules.py`, `PREREG_rules.md` | route 2: Poliakova-type local rules (exact criterion with proof, CP-SAT search) |
 | `rules_m.py`, `rule_search_m.py`, `test_rules_m.py`, `job_rules_m.py`, `PREREG_rules_m.md` | route 3: local rules on a base of multiples of m |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
-| `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md` | route 5: best response over speed and shift for n >= 55; re-check of the published 18..54 certificates |
+| `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
+| `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts |
 
 A certificate is (v, s, R) such that the arcs {t : ||v_i t + s_i|| <= R} cover the
 circle; then every time t has some runner within R of the origin, so with
 R < 1/(n+1) the shifted conjecture fails for v.
 
 ```
-python -m unittest -v test_slr test_rules test_rules_m test_slr_br test_slr_sbr
+python -m unittest -v test_slr test_rules test_rules_m test_slr_br test_slr_sbr test_slr_lp
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
 ```
@@ -60,6 +60,7 @@ python -m unittest -v test_external_certs    # needs network
 ## Credit
 
 The shifted conjecture's first counterexamples and the exact values of gamma_sh(1..n) are
-Blanco, Criado and Santos's. The counterexamples for 18..54 are aadrianvv's. The quantity
-E_n, the uniform-rule method, the 9 -> 8 rules and the result for n >= 95 are Poliakova's.
-The question is Zhang's.
+Blanco, Criado and Santos's. The counterexamples for 18..54, and the ideas of warm chains,
+speed changes, an LP polish and rigid time shifts, are aadrianvv's. The quantity E_n, the
+uniform-rule method, the 9 -> 8 rules and the result for n >= 95 are Poliakova's. The
+question is Zhang's.
