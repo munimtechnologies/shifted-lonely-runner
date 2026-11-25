@@ -14,7 +14,7 @@ checked them yet.
 
 ## Status (2026-11-25)
 
-Three pre-registered routes, **no result yet** (all jobs are waiting for compute):
+Four pre-registered routes, **no result yet**:
 
 1. **Direct search** (`PREREG.md`, job `slr-gap-v1`): a float search for shifts of
    (1..n) and nearby speed sets, every candidate re-checked exactly.
@@ -24,19 +24,22 @@ Three pre-registered routes, **no result yet** (all jobs are waiting for compute
    every n >= L/2 - 1. `rules.py` states and proves an exact local criterion for such rules;
    `rule_search.py` searches for rules with small L as a CP-SAT problem. A rule with
    L <= 38 would close the whole gap 18..94.
-3. **Local rules on a base of multiples of m** (`PREREG_rules_m.md`, job `slr-rules-m-v1`,
-   added 2026-11-25). The same idea with the base m, 2m, ..., Nm, so that added runners may
-   have speeds in thirds or quarters of the base unit, not only halves. `rules_m.py` proves
-   that a gain-1 rule of modulus m touching speeds up to L works for every n >= L/m - 1, and
-   that rescaling maps rules of modulus m into modulus um with the same threshold (so the
-   modulus-6 search contains moduli 2 and 3). A rule with L/m <= 19 would close the gap.
+3. **Local rules on a base of multiples of m** (`PREREG_rules_m.md`, job `slr-rules-m-v1`).
+   The same idea with the base m, 2m, ..., Nm, so that added runners may have speeds in
+   thirds or quarters of the base unit, not only halves. `rules_m.py` proves that a gain-1
+   rule of modulus m touching speeds up to L works for every n >= L/m - 1, and that
+   rescaling maps rules of modulus m into modulus um with the same threshold.
+4. **Best response in the test gate** (`PREREG_br.md`, added 2026-11-25). Routes 1-3 are
+   jobs waiting for free memory. `slr_br.py` is a standard-library search (best-response
+   dynamics with radius continuation, deterministic for a seed) whose results are re-checked
+   in exact arithmetic; `test_slr_br_gap.py` asks it for speeds 1..n, n = 18, 19, 20, inside
+   the repository's own test gate, so that file is only committed if all three are certified.
 
 Prior work searched on 2026-11-24 and again on 2026-11-25 (web and arXiv: "shifted lonely
-runner conjecture counterexample all n", "lonely runner" arXiv November 2026, "lonely runner
-conjecture sixteen runners arXiv"; the papers above; arXiv:2610.40694, which is about
-unshifted four-runner spectra; the authors' code at
-github.com/criado/shifted_lonely_runner_conjecture_counterexample, whose `output/` lists
-(1..n) up to n = 13): nothing covers 18 <= n <= 94.
+runner conjecture counterexample", the arXiv "lonely runner" listing newest first (46
+results, newest 2610.40694), "lonely runner conjecture sixteen runners arXiv"; the papers
+above; the authors' code at github.com/criado/shifted_lonely_runner_conjecture_counterexample,
+whose `output/` lists (1..n) up to n = 13): nothing covers 18 <= n <= 94.
 
 ## What is here
 
@@ -56,14 +59,21 @@ github.com/criado/shifted_lonely_runner_conjecture_counterexample, whose `output
 | `test_rules_m.py` | tests: Poliakova's rule passes at moduli 2, 4, 6, broken variants fail exactly where predicted by hand, the modulus-4 example and the modulus-6 n = 95 configuration pass the global checkers |
 | `job_rules_m.py` | job 3: sanity checks, search over (L/m, m) = (19, 6), (19, 4), (19, 12), (24, 6), (24, 4), (32, 6), (32, 4), global certificates |
 | `PREREG_rules_m.md` | pre-registration of job 3 |
+| `slr_br.py` | route 4: exact cover check (Fractions) and the best-response search |
+| `test_slr_br.py` | route 4 tests: Dirichlet tightness, float/exact agreement, optimality of the best response, the known case n = 8 |
+| `test_slr_br_gap.py` | route 4 open cases n = 18, 19, 20 (committed only if all three are certified) |
+| `job_br.py` | job `slr-br-v1`: the same search for every n = 18..94 (several seeds), saving exact certificates |
+| `PREREG_br.md` | pre-registration of route 4 |
 
-A certificate is (v, s, R) such that the open arcs {t : ||v_i t + s_i|| < R} cover the
-circle; then every time t has some runner closer than R to the origin, so with
+A certificate is (v, s, R) such that the arcs {t : ||v_i t + s_i|| <= R} cover the
+circle; then every time t has some runner within R of the origin, so with
 R < 1/(n+1) the shifted conjecture fails for v. Job 1 stores shifts as integers P with
-s = P / 2^48; jobs 2 and 3 store them as exact fractions.
+s = P / 2^48; jobs 2 and 3 store them as exact fractions; route 4 uses the exact binary
+values of float shifts.
 
 ```
-python -m unittest -v test_slr test_rules test_rules_m
+python -m unittest -v test_slr test_rules test_rules_m test_slr_br
+python -m unittest -v test_slr_br_gap        # about 8 minutes
 python job_slr.py --out-dir out --minutes 200 --workers 2
 pip install "ortools>=9.10,<10"
 python job_rules.py --out-dir out --minutes 290 --workers 2
