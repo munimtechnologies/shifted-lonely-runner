@@ -1,12 +1,15 @@
 # shifted-lonely-runner
 
 Does the **shifted Lonely Runner Conjecture** fail for every number of runners n >= 5?
-It is known to fail for 5 <= n <= 17 (Blanco, Criado and Santos,
-[arXiv:2603.24784](https://arxiv.org/abs/2603.24784)) and for n >= 95 (Poliakova,
-[arXiv:2609.23952](https://arxiv.org/abs/2609.23952)). Poliakova notes that
-counterexamples for 18 <= n <= 94 would settle Zhang's question
-([arXiv:2608.13599](https://arxiv.org/abs/2608.13599), Question 9.4) of whether it fails for
-every n >= 5. This repository searches for them and checks every candidate exactly.
+Counterexamples are known for 5 <= n <= 17 (Blanco, Criado and Santos,
+[arXiv:2603.24784](https://arxiv.org/abs/2603.24784)), for 18 <= n <= 54 (aadrianvv with
+Claude, published 2026-11-22 in
+[1337isnot1337/solved-conjectures](https://github.com/1337isnot1337/solved-conjectures/tree/main/results/shifted-lonely-runner-counterexamples),
+unrefereed) and for n >= 95 (Poliakova, [arXiv:2609.23952](https://arxiv.org/abs/2609.23952)).
+Counterexamples for the remaining **55 <= n <= 94** would answer the first part of Zhang's
+question ([arXiv:2608.13599](https://arxiv.org/abs/2608.13599), Question 9.4 / 8.5) of
+whether it fails for every n >= 5. This repository searches for them and checks every
+candidate exactly.
 
 By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 4.0.
 The code and text were made with AI agents working in MV2's name. No human expert has
@@ -14,32 +17,23 @@ checked them yet.
 
 ## Status (2026-11-25)
 
-Four pre-registered routes, **no result yet**:
+- **Route 4 graded** (`RESULTS_br.md`): MV2's best-response search certified speeds 1..n
+  for n = 18, 19 and 20 in the repository's test gate, as pre-registered. These are **not
+  new**: counterexamples for 18..54 had been published three days earlier (link above),
+  which MV2's prior-work searches missed. They are an independent re-finding only.
+- **Route 5** (`PREREG_sbr.md`, `slr_sbr.py`): best response over speed and shift,
+  warm-started from the published n = 54 certificate, aimed at n = 55 and up; plus an
+  independent exact re-check of all 37 published certificates (`test_external_certs.py`).
+  No result yet.
+- Routes 1-3 (compete jobs) are still waiting for compute. Routes 2 and 3 search for small
+  Poliakova-type local rules; the 18..54 authors report an exhaustive search showing that
+  no gain-1 rule over the primes {2, 3} or {2, 3, 5} has L <= 190, so those jobs are
+  expected to find nothing in those menus.
 
-1. **Direct search** (`PREREG.md`, job `slr-gap-v1`): a float search for shifts of
-   (1..n) and nearby speed sets, every candidate re-checked exactly.
-2. **Small local rules** (`PREREG_rules.md`, job `slr-rules-v1`). Poliakova's n >= 95 comes
-   from one "9 -> 8" rule that edits the even speeds 2, 4, ..., 2N and touches speeds up to
-   192, which is why it needs n >= 95. A gain-1 rule touching only speeds up to L works for
-   every n >= L/2 - 1. `rules.py` states and proves an exact local criterion for such rules;
-   `rule_search.py` searches for rules with small L as a CP-SAT problem. A rule with
-   L <= 38 would close the whole gap 18..94.
-3. **Local rules on a base of multiples of m** (`PREREG_rules_m.md`, job `slr-rules-m-v1`).
-   The same idea with the base m, 2m, ..., Nm, so that added runners may have speeds in
-   thirds or quarters of the base unit, not only halves. `rules_m.py` proves that a gain-1
-   rule of modulus m touching speeds up to L works for every n >= L/m - 1, and that
-   rescaling maps rules of modulus m into modulus um with the same threshold.
-4. **Best response in the test gate** (`PREREG_br.md`, added 2026-11-25). Routes 1-3 are
-   jobs waiting for free memory. `slr_br.py` is a standard-library search (best-response
-   dynamics with radius continuation, deterministic for a seed) whose results are re-checked
-   in exact arithmetic; `test_slr_br_gap.py` asks it for speeds 1..n, n = 18, 19, 20, inside
-   the repository's own test gate, so that file is only committed if all three are certified.
-
-Prior work searched on 2026-11-24 and again on 2026-11-25 (web and arXiv: "shifted lonely
-runner conjecture counterexample", the arXiv "lonely runner" listing newest first (46
-results, newest 2610.40694), "lonely runner conjecture sixteen runners arXiv"; the papers
-above; the authors' code at github.com/criado/shifted_lonely_runner_conjecture_counterexample,
-whose `output/` lists (1..n) up to n = 13): nothing covers 18 <= n <= 94.
+Prior work searched on 2026-11-24 and 2026-11-25 (arXiv "lonely runner" listing, newest
+first, 46 results, newest 2610.40694; web searches for the shifted conjecture and for
+counterexamples at n = 18..20; GitHub, including the code of Blanco, Criado and Santos and
+the 18..54 repository above).
 
 ## What is here
 
@@ -47,43 +41,25 @@ whose `output/` lists (1..n) up to n = 13): nothing covers 18 <= n <= 94.
 |---|---|
 | `slr.py` | two independent exact certificate checkers (Fractions sweep; integer endpoint test) and the float search |
 | `test_slr.py` | standard-library tests; every expected value is proved by hand in a comment |
-| `job_slr.py` | job 1: sanity checks on published n = 5 data, validation for n = 5..17, main search n = 18..94, retries |
-| `PREREG.md` | pre-registration of job 1 |
-| `rules.py` | local rules: the exact criterion with its proof, Poliakova's two 9 -> 8 rules, full-configuration builder |
-| `rule_search.py` | CP-SAT encoding of the criterion (needs `ortools`; only the solver call does) |
-| `test_rules.py` | tests: Poliakova's rules pass, broken variants fail where they should, her n = 95 configuration passes both global checkers, encoder cases worked by hand |
-| `job_rules.py` | job 2: sanity checks, rule search over L = 16..128, global certificates for every n the rule reaches |
-| `PREREG_rules.md` | pre-registration of job 2 |
-| `rules_m.py` | local rules of modulus m: criterion with proof, scaling, a hand-made modulus-4 example |
-| `rule_search_m.py` | CP-SAT encoding for modulus m |
-| `test_rules_m.py` | tests: Poliakova's rule passes at moduli 2, 4, 6, broken variants fail exactly where predicted by hand, the modulus-4 example and the modulus-6 n = 95 configuration pass the global checkers |
-| `job_rules_m.py` | job 3: sanity checks, search over (L/m, m) = (19, 6), (19, 4), (19, 12), (24, 6), (24, 4), (32, 6), (32, 4), global certificates |
-| `PREREG_rules_m.md` | pre-registration of job 3 |
-| `slr_br.py` | route 4: exact cover check (Fractions) and the best-response search |
-| `test_slr_br.py` | route 4 tests: Dirichlet tightness, float/exact agreement, optimality of the best response, the known case n = 8 |
-| `test_slr_br_gap.py` | route 4 open cases n = 18, 19, 20 (committed only if all three are certified) |
-| `job_br.py` | job `slr-br-v1`: the same search for every n = 18..94 (several seeds), saving exact certificates |
-| `PREREG_br.md` | pre-registration of route 4 |
+| `job_slr.py`, `PREREG.md` | route 1: direct search, n = 18..94 |
+| `rules.py`, `rule_search.py`, `test_rules.py`, `job_rules.py`, `PREREG_rules.md` | route 2: Poliakova-type local rules (exact criterion with proof, CP-SAT search) |
+| `rules_m.py`, `rule_search_m.py`, `test_rules_m.py`, `job_rules_m.py`, `PREREG_rules_m.md` | route 3: local rules on a base of multiples of m |
+| `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
+| `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md` | route 5: best response over speed and shift for n >= 55; re-check of the published 18..54 certificates |
 
 A certificate is (v, s, R) such that the arcs {t : ||v_i t + s_i|| <= R} cover the
 circle; then every time t has some runner within R of the origin, so with
-R < 1/(n+1) the shifted conjecture fails for v. Job 1 stores shifts as integers P with
-s = P / 2^48; jobs 2 and 3 store them as exact fractions; route 4 uses the exact binary
-values of float shifts.
+R < 1/(n+1) the shifted conjecture fails for v.
 
 ```
-python -m unittest -v test_slr test_rules test_rules_m test_slr_br
-python -m unittest -v test_slr_br_gap        # about 8 minutes
-python job_slr.py --out-dir out --minutes 200 --workers 2
-pip install "ortools>=9.10,<10"
-python job_rules.py --out-dir out --minutes 290 --workers 2
-python job_rules_m.py --out-dir out --minutes 330 --workers 2
+python -m unittest -v test_slr test_rules test_rules_m test_slr_br test_slr_sbr
+python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
+python -m unittest -v test_external_certs    # needs network
 ```
 
 ## Credit
 
-The conjecture's shifted form and its first counterexamples, the exact values of
-gamma_sh(1..n) used as sanity checks, and the published n = 5 certificates are Blanco,
-Criado and Santos's. The quantity E_n, the uniform-rule method, the 9 -> 8 rules and the
-result for n >= 95 are Poliakova's; jobs 2 and 3 only search for smaller rules of her kind
-(job 3 on bases of multiples of m, a direct generalisation). The question is Zhang's.
+The shifted conjecture's first counterexamples and the exact values of gamma_sh(1..n) are
+Blanco, Criado and Santos's. The counterexamples for 18..54 are aadrianvv's. The quantity
+E_n, the uniform-rule method, the 9 -> 8 rules and the result for n >= 95 are Poliakova's.
+The question is Zhang's.
