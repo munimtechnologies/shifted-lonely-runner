@@ -5,34 +5,31 @@ Counterexamples are known for 5 <= n <= 17 (Blanco, Criado and Santos,
 [arXiv:2603.24784](https://arxiv.org/abs/2603.24784)), for 18 <= n <= 54 (aadrianvv with
 Claude, published 2026-11-22), for n = 55, 56 and 57 (tomdif, published 2026-11-25; all in
 [1337isnot1337/solved-conjectures](https://github.com/1337isnot1337/solved-conjectures/tree/main/results/shifted-lonely-runner-counterexamples),
-unrefereed), and for n >= 95 (Poliakova, [arXiv:2609.23952](https://arxiv.org/abs/2609.23952)).
-Counterexamples for the remaining cases would answer the first part of Zhang's question
+unrefereed; 18..57 Lean-checked there in PR 755), and for n >= 95 (Poliakova,
+[arXiv:2609.23952](https://arxiv.org/abs/2609.23952)). Counterexamples for the remaining cases
+would answer the first part of Zhang's question
 ([arXiv:2608.13599](https://arxiv.org/abs/2608.13599), Question 8.5) of whether it fails for
-every n >= 5. This repository searched for them and checks every candidate exactly.
+every n >= 5. This repository searches for them and checks every candidate exactly.
 
 By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 4.0.
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-25, 21:30 UTC)
+## Status (2026-11-26, 05:00 UTC)
 
-- **Open: 58 <= n <= 94.** tomdif's pull requests
-  [646](https://github.com/1337isnot1337/solved-conjectures/pull/646) and
-  [660](https://github.com/1337isnot1337/solved-conjectures/pull/660), merged 2026-11-25,
-  certified n = 55, 56 and 57.
+- **Open: 58 <= n <= 94** (checked 2026-11-26: arXiv, GitHub, solved-conjectures pull requests).
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
-  not as a new case. Routes 1, 4-9 are graded, all short of the open range.
-- **Route 1 graded** (`RESULTS_gap.md`): the direct search on speeds 1..n certified only
-  n = 18-25 and 27 (H1 and H2 false).
-- **Route 9 graded** (`RESULTS_consec.md`): the chain on speeds 1..n from Blanco-Criado-Santos's
-  exact n = 11 optimum certified n = 12..22 and failed at 23 (K3-K6 false).
-- **Why we are pausing.** Python search in a test gate cannot keep up with the compiled
-  annealers now working upward from n = 57. A new route here needs a structural idea (for
-  example a Poliakova-type local rule with a smaller largest speed), not more of the same search.
+  not as a new case. Routes 1 and 4-9 are graded; none reached the open range.
+- **Route 10 (new, pre-registered in [PREREG_rules_s.md](PREREG_rules_s.md)).** One local rule
+  of Poliakova's kind with gain 1 and threshold at most 58 would settle all of 58..94 at once.
+  Route 10 searches only at that size (largest speed L = 59 m on a base of multiples of m), over
+  smooth speeds, so that CP-SAT can decide each menu rather than time out. It runs as three
+  test-gate probes and the compete job `slr-rules-s-v1`.
+- Routes 2 and 3 (compete jobs for Poliakova-type rules over all speeds, climbing L from 16)
+  are still waiting for compute.
 - Independent re-check of the published 18..54 certificates: all 37 pass MV2's three exact
   checkers (`test_external_certs.py`, commit c702698).
-- Routes 2 and 3 (compete jobs for Poliakova-type rules) are still waiting for compute.
 
 ## What is here
 
@@ -44,6 +41,7 @@ checked them yet.
 | `job_slr.py`, `PREREG.md`, `RESULTS_gap.md` | route 1: direct search, n = 18..94 (certified 18-25, 27; not new) |
 | `rules.py`, `rule_search.py`, `test_rules.py`, `job_rules.py`, `PREREG_rules.md` | route 2: Poliakova-type local rules (exact criterion with proof, CP-SAT search) |
 | `rules_m.py`, `rule_search_m.py`, `test_rules_m.py`, `job_rules_m.py`, `PREREG_rules_m.md` | route 3: local rules on a base of multiples of m |
+| `rule_search_s.py`, `test_rules_s.py`, `job_rules_s.py`, `PREREG_rules_s.md` | route 10: local rules at threshold 58 over smooth speeds, then certificates for every n they reach |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -58,9 +56,10 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
+pip install "ortools>=9.10" && python job_rules_s.py --out-dir out --minutes 120
 ```
 
 ## Credit
