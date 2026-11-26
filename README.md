@@ -15,19 +15,24 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-26, 05:00 UTC)
+## Status (2026-11-26, 08:30 UTC)
 
-- **Open: 58 <= n <= 94** (checked 2026-11-26: arXiv, GitHub, solved-conjectures pull requests).
+- **Open: 58 <= n <= 94** (checked 2026-11-26: arXiv, GitHub repositories sorted by update,
+  solved-conjectures pull requests and issue 110).
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
-  not as a new case. Routes 1 and 4-9 are graded; none reached the open range.
-- **Route 10 (new, pre-registered in [PREREG_rules_s.md](PREREG_rules_s.md)).** One local rule
-  of Poliakova's kind with gain 1 and threshold at most 58 would settle all of 58..94 at once.
-  Route 10 searches only at that size (largest speed L = 59 m on a base of multiples of m), over
-  smooth speeds, so that CP-SAT can decide each menu rather than time out. It runs as three
-  test-gate probes and the compete job `slr-rules-s-v1`.
-- Routes 2 and 3 (compete jobs for Poliakova-type rules over all speeds, climbing L from 16)
-  are still waiting for compute.
+  not as a new case.
+- **Route 10 graded** ([RESULTS_rules_s.md](RESULTS_rules_s.md)). The m = 2, 5-smooth halves
+  menu at threshold 58 is INFEASIBLE, but only for rules whose helpers are 5-smooth too (an
+  encoding gap, now fixed). The other eight tiers were too big to build. The m = 2 base had
+  already been searched by tomdif and aadrianvv.
+- **Route 11 (new, pre-registered in [PREREG_rules_c.md](PREREG_rules_c.md)).** Local rules
+  on bases of multiples of **3, 4, 6 and 12**, where the added runners can sit at thirds,
+  quarters and sixths of the base time scale. Every untouched base speed counts as a helper.
+  A counterexample-guided loop adds a class's clauses only when a candidate fails it, so each
+  menu is decided exactly (a rule passing `rules_m.local_check`, or CP-SAT INFEASIBLE on a
+  subset of the clauses, which proves that the menu has no rule). It aims at threshold 58,
+  which would settle 58..94 at once, and at threshold 94, which would lower Poliakova's 95.
 - Independent re-check of the published 18..54 certificates: all 37 pass MV2's three exact
   checkers (`test_external_certs.py`, commit c702698).
 
@@ -41,7 +46,8 @@ checked them yet.
 | `job_slr.py`, `PREREG.md`, `RESULTS_gap.md` | route 1: direct search, n = 18..94 (certified 18-25, 27; not new) |
 | `rules.py`, `rule_search.py`, `test_rules.py`, `job_rules.py`, `PREREG_rules.md` | route 2: Poliakova-type local rules (exact criterion with proof, CP-SAT search) |
 | `rules_m.py`, `rule_search_m.py`, `test_rules_m.py`, `job_rules_m.py`, `PREREG_rules_m.md` | route 3: local rules on a base of multiples of m |
-| `rule_search_s.py`, `test_rules_s.py`, `job_rules_s.py`, `PREREG_rules_s.md` | route 10: local rules at threshold 58 over smooth speeds, then certificates for every n they reach |
+| `rule_search_s.py`, `test_rules_s.py`, `job_rules_s.py`, `PREREG_rules_s.md`, `RESULTS_rules_s.md` | route 10: local rules at threshold 58 over smooth speeds (graded) |
+| `rule_search_c.py`, `test_rules_c.py`, `job_rules_c.py`, `fetch_deps_c.py`, `PREREG_rules_c.md` | route 11: counterexample-guided exact search for rules on bases of multiples of 3, 4, 6, 12 |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -56,10 +62,10 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
-pip install "ortools>=9.10" && python job_rules_s.py --out-dir out --minutes 120
+pip install "ortools>=9.10" && python job_rules_c.py --out-dir out --minutes 120
 ```
 
 ## Credit
@@ -69,4 +75,5 @@ including the n = 5 and n = 11 configurations route 9 starts from, are Blanco, C
 Santos's. The counterexamples for 18..54 are aadrianvv's, and so are the ideas of warm chains,
 speed changes, grid-cell annealing, an LP polish and rigid time shifts. Those for 55, 56 and 57
 are tomdif's. The quantity E_n, the uniform-rule method, the 9 -> 8 rules and the result for
-n >= 95 are Poliakova's. The question is Zhang's.
+n >= 95 are Poliakova's. The question is Zhang's. The m = 2 rule-search negatives that route 11
+builds on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structured patch, issue 110).
