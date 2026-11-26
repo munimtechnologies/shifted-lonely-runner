@@ -15,30 +15,39 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-26, 14:00 UTC)
+## Status (2026-11-26, 15:40 UTC)
 
-- **Open: 58 <= n <= 94** (checked 2026-11-26 about 13:40 UTC: solved-conjectures issue 110
-  and its pull requests; earlier the same day the arXiv listing and GitHub repositories sorted
-  by update).
+- **Open: 58 <= n <= 94** (checked 2026-11-26 about 15:15 UTC: solved-conjectures issue 110
+  and its pull requests, including F1Justin's open PR 850 on one-runner extensions of the
+  57-runner configuration; the arXiv listing newest first).
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
   not as a new case.
-- **Route 11** ([PREREG_rules_c.md](PREREG_rules_c.md)). Local rules on bases of multiples of
-  3, 4, 6 and 12, decided exactly by a counterexample-guided loop. The sanity tier found
-  Poliakova's rule again (m = 2, L = 192). **Menu A on the base of multiples of 3 has no gain-1
-  rule with threshold 58** (CP-SAT INFEASIBLE after 4 rounds and 134 classes, 157 s; touched and
-  added speeds 5-smooth, every other multiple of 3 up to 177 a helper, beta in steps of 1/2 on
-  [-2, 2], shift denominators {1, 2, 3, 4, 6}). This covers that finite menu only.
-- **Route 11b** ([PREREG_rules_d.md](PREREG_rules_d.md)). Feasibility mode with hints and caps.
-  Its m = 6 sanity tier found Poliakova's rule scaled by 3 in 21 s. c4A58, c6A58 (1832 s in
-  total) and the known-negative control c2neg stayed undecided.
-- **Route 11c (new, pre-registered in [PREREG_rules_e.md](PREREG_rules_e.md)).** Every menu is
-  split into cubes by its largest touched speed (removed or rephased). The mirror symmetry is
-  broken at that speed and the cubes are solved in parallel. Each tier reports a "frontier": no
-  rule of the menu has all its touched speeds below it.
+- **Route 12 (new, pre-registered in [PREREG_rules_f.md](PREREG_rules_f.md)).** It fixes
+  Poliakova's gadget (whole, or without its top removal and added runners) on bases of multiples
+  of 2, 4 and 6. It then asks whether thirds, quarters or sixths let the gadget be finished
+  below 96 or doubled at 96. Either would give threshold 94.
+- **Route 11c** ([PREREG_rules_e.md](PREREG_rules_e.md), interim grading in
+  [RESULTS_rules_e.md](RESULTS_rules_e.md)). Both sanity cubes found Poliakova's rule again
+  (m = 2 and m = 6). For each finite menu, no gain-1 rule has all its touched speeds at or below
+  the frontier: 72 for the control c2neg (29 of 38 cubes decided), 32 for c4A58, 36 for c6A58.
+  The cubes with a large top speed are still open.
+- **Route 11** ([PREREG_rules_c.md](PREREG_rules_c.md)). **Menu A on the base of multiples of 3
+  has no gain-1 rule with threshold 58** (CP-SAT INFEASIBLE after 4 rounds and 134 classes,
+  157 s; touched and added speeds 5-smooth, every other multiple of 3 up to 177 a helper, beta
+  in steps of 1/2 on [-2, 2], shift denominators {1, 2, 3, 4, 6}). This covers that finite
+  menu only.
+- **Route 11b** ([PREREG_rules_d.md](PREREG_rules_d.md)): feasibility mode; superseded by 11c.
 - **Route 10 graded** ([RESULTS_rules_s.md](RESULTS_rules_s.md)); superseded by route 11.
 - Independent re-check of the published 18..54 certificates: all 37 pass MV2's three exact
   checkers (`test_external_certs.py`, commit c702698).
+
+A fact used by route 12, with its proof: **no single added runner covers every class of a
+touched base speed q.** The classes are k in [0, q) with gcd(k, q/m) = 1. With j = q/m, their
+differences generate 1 if j is odd (k = 1, 2, or k = 0 and 1 when j = 1) and 2 if j is even
+(1, 1 + j and j - 1). A runner of speed w covers class k only if (w/q) k + s0 is an integer,
+so one runner covering all classes needs (w/q) * 1 or (w/q) * 2 to be an integer. Then w is a
+multiple of q or of q/2 = m j/2, so a multiple of m: a base speed, not an added one.
 
 ## What is here
 
@@ -53,7 +62,8 @@ checked them yet.
 | `rule_search_s.py`, `test_rules_s.py`, `job_rules_s.py`, `PREREG_rules_s.md`, `RESULTS_rules_s.md` | route 10: local rules at threshold 58 over smooth speeds (graded) |
 | `rule_search_c.py`, `test_rules_c.py`, `job_rules_c.py`, `fetch_deps_c.py`, `PREREG_rules_c.md` | route 11: counterexample-guided exact search for rules on bases of multiples of 3, 4, 6, 12 |
 | `rule_search_d.py`, `test_rules_d.py`, `job_rules_d.py`, `fetch_deps_d.py`, `PREREG_rules_d.md` | route 11b: the same search in feasibility mode, with caps and an m = 6 sanity tier |
-| `rule_search_e.py`, `test_rules_e.py`, `job_rules_e.py`, `fetch_deps_e.py`, `PREREG_rules_e.md` | route 11c: cubes by the largest touched speed, mirror symmetry broken, cubes in parallel |
+| `rule_search_e.py`, `test_rules_e.py`, `job_rules_e.py`, `fetch_deps_e.py`, `PREREG_rules_e.md`, `RESULTS_rules_e.md` | route 11c: cubes by the largest touched speed, mirror symmetry broken, cubes in parallel |
+| `rule_search_f.py`, `test_rules_f.py`, `fetch_deps_f.py`, `PREREG_rules_f.md` | route 12: Poliakova's gadget fixed, the rest searched with thirds, quarters and sixths |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -68,10 +78,10 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
-pip install "ortools>=9.10" && python job_rules_e.py --out-dir out --minutes 120
+pip install "ortools>=9.10" && python rule_search_f.py --out-dir out --minutes 120
 ```
 
 ## Credit
@@ -81,7 +91,7 @@ including the n = 5 and n = 11 configurations route 9 starts from, are Blanco, C
 Santos's. The counterexamples for 18..54 are aadrianvv's, and so are the ideas of warm chains,
 speed changes, grid-cell annealing, an LP polish and rigid time shifts. Those for 55, 56 and 57
 are tomdif's. The quantity E_n, the uniform-rule method, the 9 -> 8 rules and the result for
-n >= 95 are Poliakova's. The question is Zhang's. The m = 2 rule-search negatives that route 11
-builds on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structured patch, issue 110);
-aadrianvv also listed bases of multiples of 3 or 6 as a direction to try (issue 110,
+n >= 95 are Poliakova's. The question is Zhang's. The m = 2 rule-search negatives that routes 11
+and 12 build on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structured patch, issue
+110); aadrianvv also listed bases of multiples of 3 or 6 as a direction to try (issue 110,
 2026-11-21), without reporting a result.
