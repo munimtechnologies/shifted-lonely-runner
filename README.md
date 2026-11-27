@@ -16,17 +16,19 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 20:05 UTC)
+## Status (2026-11-27, 21:30 UTC)
 
-- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-27 about 19:45 UTC: the Zenodo
+- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-27 about 21:20 UTC: the Zenodo
   API, arXiv's newest listings and solved-conjectures pull requests (F1Justin's PR 850, merged,
   and PR 1017, open). Nothing claims a case in 58..62 or 64..94.
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f) was found
   on the same day as tomdif's; we count it as an independent certificate, not as a new case.
-- **Route 19 (new, pre-registered in [PREREG_rules_o.md](PREREG_rules_o.md)).** Exact rules at
-  one fixed N that use the slack between 1/(N + 1) and 1/(n + 1), which is how Callens's n = 63
-  cover works (below), searched completely over finite 3-smooth menus for every N in the open
-  range.
+- **Route 19, interim** ([RESULTS_rules_o.md](RESULTS_rules_o.md)). The exact fixed-N search
+  re-derives gain-1 rules at N = 96 (Poliakova's setting) and at N = 64 (Callens's n = 63),
+  even with shifts in halves of delta only. None of the 37 targets in the open range was decided
+  yet: each solver call minimised the rule size and ran to its time limit.
+- **Route 19b (new, pre-registered in [PREREG_rules_p.md](PREREG_rules_p.md)).** The same exact
+  search with a feasibility-only solver (`top_p.py`), resumed from route 19's classes.
 - **Routes 15-18 closed** ([RESULTS_rules_j.md](RESULTS_rules_j.md),
   [RESULTS_rules_k.md](RESULTS_rules_k.md), [RESULTS_rules_l.md](RESULTS_rules_l.md),
   [RESULTS_rules_n.md](RESULTS_rules_n.md)). Local searches around Callens's and Poliakova's
@@ -106,7 +108,8 @@ some runner (speed w, shift s0 + beta/(N + 1)) and integer J satisfy
 | `descent_k.py`, `test_descent_k.py`, `PREREG_rules_k.md`, `RESULTS_rules_k.md` | route 16: continuous best-response shifts, speed swaps and kicks (graded) |
 | `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md`, `RESULTS_rules_l.md` | route 17: exact one-added-runner decision; exact max-margin polish (graded) |
 | `climb_n.py`, `test_climb_n.py`, `PREREG_rules_n.md`, `RESULTS_rules_n.md` | route 18: climb of the exact margin; rigid-pair lemma (graded) |
-| `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 |
+| `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (interim grade) |
+| `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md` | route 19b: route 19 with a feasibility-only solver, resumed from route 19's classes |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
@@ -120,8 +123,8 @@ R <= 1/(n+1) the shifted conjecture fails for v.
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o
-pip install ortools && python -c "import top_o; print(top_o.probe_o(budget=3600))"
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p
+pip install ortools && python -c "import top_p; print(top_p.probe_p(budget=3600))"
 ```
 
 ## Credit
