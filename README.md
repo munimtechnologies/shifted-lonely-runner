@@ -16,22 +16,26 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 10:15 UTC)
+## Status (2026-11-27, 12:15 UTC)
 
 - **Open: 58 <= n <= 62 and 64 <= n <= 94.** n = 63 is Xavier Callens's
   ([Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 8 November 2026: a
   Poliakova-type move on 2, 4, ..., 128, gamma = 66/4225 < 1/64; no human audit). Our status
   lines from 24 to 26 November said "58..94 open"; that was wrong, because our searches had
-  missed Zenodo. Re-checked 2026-11-27 about 09:45 UTC: the Zenodo API, the arXiv listing newest
-  first, and solved-conjectures pull requests (F1Justin's PR 850, merged 26 November, shows that
-  the 57-runner configuration does not extend to 58 by one added runner).
+  missed Zenodo. Re-checked 2026-11-27 about 12:00 UTC: the Zenodo API, the arXiv listing newest
+  first, and solved-conjectures pull requests (F1Justin's PR 850, merged, and PR 1017, open:
+  the fixed 57-runner configuration plus any seven extra runners still leaves an uncovered time
+  at radius 1/59).
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
   not as a new case.
-- **Route 14 (new, pre-registered in [PREREG_rules_i.md](PREREG_rules_i.md)).** Fixed-n searches
-  at smooth N inside the open range (n = 59, 62, 71, 74, 79, 80, 89) on bases of multiples of
-  2, 3, 4 and 6, with route 13's CP-SAT search and Poliakova's rule scaled to the base as a
-  solver hint. Sanity tier: the scaled rule at N = 96 on multiples of 4.
+- **Route 15 (new, pre-registered in [PREREG_rules_j.md](PREREG_rules_j.md)).** Neighbours of the
+  two structured covers: delete one or two runners from Callens's 63 or Poliakova's 95 (n = 62,
+  61, 94, 93) or add one to Callens's (n = 64), with every shift re-tuned by up to one Dirichlet
+  step; exact point CEGAR with CP-SAT. Sanity tiers re-check both source covers.
+- **Route 14, interim** ([RESULTS_rules_i.md](RESULTS_rules_i.md)). The sanity tier found
+  Poliakova's rule scaled to multiples of 4; no target tier was decided after two probes, and
+  CP-SAT timed out without a candidate or a proof on several of them.
 - **Route 13b graded** ([RESULTS_rules_h.md](RESULTS_rules_h.md)). The incremental SAT solver
   made no iteration in about 300 s per tier and failed its sanity tier, so none of its results
   count. Dropped.
@@ -62,6 +66,11 @@ with the same shifts** (at time t the scaled runners sit where the old ones sit 
 So Poliakova's 95-runner configuration on 2, 4, ..., 192 gives 95-runner configurations on the
 multiples of 4 and of 6 up to 96 m.
 
+A fact used by route 15: **k runners that cover at radius 1/(n+1) give a counterexample for n
+whenever k <= n**, because extra runners at shift 0 only add arcs. So deleting d runners from a
+k-runner cover is enough for n = k - d if the survivors, possibly re-tuned, still cover at the
+larger radius 1/(k - d + 1).
+
 ## What is here
 
 | file | what it does |
@@ -79,7 +88,8 @@ multiples of 4 and of 6 up to 96 m.
 | `rule_search_f.py`, `test_rules_f.py`, `fetch_deps_f.py`, `PREREG_rules_f.md`, `RESULTS_rules_f.md` | route 12: Poliakova's gadget fixed, the rest searched with thirds, quarters and sixths (graded) |
 | `rule_search_g.py`, `test_rules_g.py`, `fetch_deps_g.py`, `PREREG_rules_g.md`, `RESULTS_rules_g.md` | route 13: exact fixed-n search for a 94-runner counterexample (CEGAR over time points, CP-SAT) |
 | `rule_search_h.py`, `test_rules_h.py`, `PREREG_rules_h.md`, `RESULTS_rules_h.md` | route 13b: the same question with an incremental SAT solver (graded: failed its sanity tier) |
-| `rule_search_i.py`, `test_rules_i.py`, `PREREG_rules_i.md` | route 14: fixed-n CP-SAT searches at smooth N inside 58..94 with a scaled Poliakova hint |
+| `rule_search_i.py`, `test_rules_i.py`, `PREREG_rules_i.md`, `RESULTS_rules_i.md` | route 14: fixed-n CP-SAT searches at smooth N inside 58..94 with a scaled Poliakova hint (interim) |
+| `descent_j.py`, `test_descent_j.py`, `PREREG_rules_j.md` | route 15: delete from or add to the known 63- and 95-runner covers, every shift re-tuned |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -94,10 +104,10 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_descent_j test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
-pip install ortools && python rule_search_i.py --out-dir out --minutes 120
+pip install ortools && python descent_j.py --out-dir out --minutes 120
 ```
 
 ## Credit
@@ -112,6 +122,8 @@ and 12 build on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structure
 110). aadrianvv also ran the first fixed-n search on Poliakova's even base, the idea route 13
 extends, and listed bases of multiples of 3 or 6 as a direction to try (issue 110,
 2026-11-21), without reporting a result. The one-runner extension bound for n = 57 is
-F1Justin's (PR 850). The n = 63 counterexample, the first inside 58..94, and the observation
-that its menu fails for N = 60..63 and 65..95 are Xavier Callens's (Zenodo 24051700 and
-24132291); the choice of smooth N in routes 13b and 14 follows from it.
+F1Justin's (PR 850), and so is the idea of bounding extensions of a fixed cover (PR 1017).
+The n = 63 counterexample, the first inside 58..94, and the observation that its menu fails for
+N = 60..63 and 65..95 are Xavier Callens's (Zenodo 24051700 and 24132291; CC BY 4.0); route 15
+starts from his certificate `cert_n063.json`, and the choice of smooth N in routes 13b and 14
+follows from his work.
