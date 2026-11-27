@@ -16,27 +16,30 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 17:00 UTC)
+## Status (2026-11-27, 18:40 UTC)
 
 - **Open: 58 <= n <= 62 and 64 <= n <= 94.** n = 63 is Xavier Callens's
   ([Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 8 November 2026: a
   Poliakova-type move on 2, 4, ..., 128, gamma = 66/4225 < 1/64; no human audit). Our status
   lines from 24 to 26 November said "58..94 open"; that was wrong, because our searches had
-  missed Zenodo. Re-checked 2026-11-27 about 16:45 UTC: the Zenodo API and solved-conjectures
-  pull requests (F1Justin's PR 850, merged, and PR 1017, open: the fixed 57-runner
-  configuration plus any seven extra runners still leaves an uncovered time at radius 1/59).
+  missed Zenodo. Re-checked 2026-11-27 about 18:20 UTC: the Zenodo API, arXiv's newest
+  listings and solved-conjectures pull requests (F1Justin's PR 850, merged, and PR 1017, open:
+  the fixed 57-runner configuration plus any seven extra runners still leaves an uncovered
+  time at radius 1/59). Nothing claims a case in 58..62 or 64..94.
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
   not as a new case.
-- **Route 17 (new, pre-registered in [PREREG_rules_l.md](PREREG_rules_l.md)).** Exact answers
-  where route 16 could only measure: (A) can one added runner of any speed turn Callens's
-  fixed-shift cover into an n = 64 cover (decided exactly for every speed that could work)?
-  (B) what is the largest overlap margin that any re-tuning of the shifts gives a near-cover's
-  chain of arcs (a minimum cycle mean, computed exactly)? (C) polish and search alternately.
+- **Route 18 (new, pre-registered in [PREREG_rules_n.md](PREREG_rules_n.md)).** Climbs the exact
+  chain margin itself, changing speeds at the critical cycle, and explains the zero margins route
+  17 found by a lemma on **rigid pairs** (below).
+- **Route 17, interim** ([RESULTS_rules_l.md](RESULTS_rules_l.md)). **No single added runner,
+  of any speed, turns Callens's n = 63 cover with its shifts fixed into an n = 64 cover at
+  radius 1/65** (decided exactly and completely; the best speed, 130, reaches only 64 of the 144
+  gaps). The near-covers route 16 reached for n = 64 and n = 94 have an exact chain margin of
+  exactly 0; in both, the blocking cycle is one pair of runners whose speeds sum to 2(n + 1).
 - **Route 16, interim** ([RESULTS_rules_k.md](RESULTS_rules_k.md)). Every target tier fell
   from 1e-5..1e-4 to an uncovered measure of 1e-9..4e-9 at its shrunk radius and stopped; no
-  cover. That floor is about what touching arcs give under the shrink. The calibration tier had
-  not re-found Callens's cover after two probes.
+  cover. Route 17 showed that these end points touch exactly.
 - **Route 15 graded** ([RESULTS_rules_j.md](RESULTS_rules_j.md)). Both sanity tiers re-found
   covers next to Callens's and Poliakova's; 0 of 5 targets decided after three probes. No
   single runner can be dropped from either cover without re-tuning (smallest uncovered
@@ -74,7 +77,7 @@ with the same shifts** (at time t the scaled runners sit where the old ones sit 
 So Poliakova's 95-runner configuration on 2, 4, ..., 192 gives 95-runner configurations on the
 multiples of 4 and of 6 up to 96 m.
 
-A fact used by routes 15 to 17: **k runners that cover at radius 1/(n+1) give a counterexample
+A fact used by routes 15 to 18: **k runners that cover at radius 1/(n+1) give a counterexample
 for n whenever k <= n**, because extra runners at shift 0 only add arcs. So deleting d runners
 from a k-runner cover is enough for n = k - d if the survivors, possibly re-tuned, still cover
 at the larger radius 1/(k - d + 1).
@@ -85,6 +88,16 @@ x_i = s_i / v_i, the two overlaps of consecutive chain arcs A, B are c1 - x_A + 
 c2 - x_B + x_A with c1, c2 independent of the shifts, so "every overlap >= eps" is a system of
 difference constraints. It is feasible iff the constraint graph with weights c - eps has no
 negative cycle, so the largest eps is the minimum cycle mean of the weights c.
+
+A fact used by route 18, with its proof: **rigid pairs.** If runners of speeds a and b meet
+twice in a chain (A_k before B_m, and B_m' before A_k'), the sum of the two overlaps is
+2R(a + b)/(ab) + (b(k - k') + a(m' - m))/(ab), whatever the shifts. The second numerator runs
+over the multiples of g = gcd(a, b), so at R = 1/(n + 1) the sum can be exactly 0 only if
+(n + 1) g divides 2(a + b). For such a pair the two contacts can never both overlap, so a chain
+that needs both has margin at most 0 under every re-tuning of the shifts. Both blocking pairs
+route 17 found are rigid: 6 + 124 = 2 x 65 and 6 + 184 = 2 x 95, gcd 2.
+`test_climb_n.py` checks the "only if" exhaustively, together with the converse, for all
+a < b <= 8 and 2 <= n <= 8.
 
 ## What is here
 
@@ -106,7 +119,8 @@ negative cycle, so the largest eps is the minimum cycle mean of the weights c.
 | `rule_search_i.py`, `test_rules_i.py`, `PREREG_rules_i.md`, `RESULTS_rules_i.md` | route 14: fixed-n CP-SAT searches at smooth N inside 58..94 with a scaled Poliakova hint (graded) |
 | `descent_j.py`, `test_descent_j.py`, `PREREG_rules_j.md`, `RESULTS_rules_j.md` | route 15: delete from or add to the known 63- and 95-runner covers, every shift re-tuned on a grid (graded) |
 | `descent_k.py`, `test_descent_k.py`, `PREREG_rules_k.md`, `RESULTS_rules_k.md` | route 16: the same neighbours, continuous best-response shifts, speed swaps and kicks (interim) |
-| `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md` | route 17: exact one-added-runner decision for Callens's cover; exact max-margin polish (minimum cycle mean) of near-covers |
+| `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md`, `RESULTS_rules_l.md` | route 17: exact one-added-runner decision for Callens's cover; exact max-margin polish (minimum cycle mean) of near-covers (interim) |
+| `climb_n.py`, `test_climb_n.py`, `PREREG_rules_n.md` | route 18: climb of the exact margin with speed changes at the critical cycle; rigid-pair lemma |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -121,12 +135,13 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_descent_j test_descent_k test_polish_l test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_descent_j test_descent_k test_polish_l test_climb_n test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
 pip install ortools && python descent_j.py --out-dir out --minutes 120
 python descent_k.py --out-dir out --minutes 120   # standard library only
 python polish_l.py --out-dir out --minutes 120    # standard library only
+python climb_n.py --out-dir out --minutes 120     # standard library only
 ```
 
 ## Credit
@@ -146,5 +161,5 @@ F1Justin's (PR 850), and so is the idea of bounding extensions of a fixed cover 
 route 17's part A applies to Callens's cover.
 The n = 63 counterexample, the first inside 58..94, and the observation that its menu fails for
 N = 60..63 and 65..95 are Xavier Callens's (Zenodo 24051700 and 24132291; CC BY 4.0); routes 15
-to 17 start from his certificate `cert_n063.json`, and the choice of smooth N in routes 13b and
+to 18 start from his certificate `cert_n063.json`, and the choice of smooth N in routes 13b and
 14 follows from his work.
