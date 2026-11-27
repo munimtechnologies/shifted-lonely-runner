@@ -16,29 +16,31 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 15:40 UTC)
+## Status (2026-11-27, 17:00 UTC)
 
 - **Open: 58 <= n <= 62 and 64 <= n <= 94.** n = 63 is Xavier Callens's
   ([Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 8 November 2026: a
   Poliakova-type move on 2, 4, ..., 128, gamma = 66/4225 < 1/64; no human audit). Our status
   lines from 24 to 26 November said "58..94 open"; that was wrong, because our searches had
-  missed Zenodo. Re-checked 2026-11-27 about 15:30 UTC: the Zenodo API, the arXiv listing newest
-  first, and solved-conjectures pull requests (F1Justin's PR 850, merged, and PR 1017, open:
-  the fixed 57-runner configuration plus any seven extra runners still leaves an uncovered time
-  at radius 1/59).
+  missed Zenodo. Re-checked 2026-11-27 about 16:45 UTC: the Zenodo API and solved-conjectures
+  pull requests (F1Justin's PR 850, merged, and PR 1017, open: the fixed 57-runner
+  configuration plus any seven extra runners still leaves an uncovered time at radius 1/59).
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
   not as a new case.
-- **Route 16 (new, pre-registered in [PREREG_rules_k.md](PREREG_rules_k.md)).** The same
-  neighbour question as route 15, searched heuristically: every shift moves continuously to its
-  exact best response, with speed swaps and kicks, starting from Callens's cover minus one or
-  two runners (n = 62, 61), plus one runner (n = 64), and Poliakova's minus one (n = 94). A
-  calibration tier restarts Callens's speeds from random shifts. Only finds covers; proves no
-  negative.
-- **Route 15, interim** ([RESULTS_rules_j.md](RESULTS_rules_j.md)). Both sanity tiers re-found
-  covers next to Callens's and Poliakova's; none of the five target tiers was decided after two
-  probes. Deleting 124 from Callens's cover (or 188 from Poliakova's) leaves no float gap one
-  radius step up, at 1/62 (1/94).
+- **Route 17 (new, pre-registered in [PREREG_rules_l.md](PREREG_rules_l.md)).** Exact answers
+  where route 16 could only measure: (A) can one added runner of any speed turn Callens's
+  fixed-shift cover into an n = 64 cover (decided exactly for every speed that could work)?
+  (B) what is the largest overlap margin that any re-tuning of the shifts gives a near-cover's
+  chain of arcs (a minimum cycle mean, computed exactly)? (C) polish and search alternately.
+- **Route 16, interim** ([RESULTS_rules_k.md](RESULTS_rules_k.md)). Every target tier fell
+  from 1e-5..1e-4 to an uncovered measure of 1e-9..4e-9 at its shrunk radius and stopped; no
+  cover. That floor is about what touching arcs give under the shrink. The calibration tier had
+  not re-found Callens's cover after two probes.
+- **Route 15 graded** ([RESULTS_rules_j.md](RESULTS_rules_j.md)). Both sanity tiers re-found
+  covers next to Callens's and Poliakova's; 0 of 5 targets decided after three probes. No
+  single runner can be dropped from either cover without re-tuning (smallest uncovered
+  measures 1.6e-4 and 6.8e-5). Closed.
 - **Route 14 graded** ([RESULTS_rules_i.md](RESULTS_rules_i.md)). The sanity tier found
   Poliakova's rule scaled to multiples of 4; all 12 target tiers stayed undecided after 7 to 11
   CEGAR iterations each. Closed without a result.
@@ -72,10 +74,17 @@ with the same shifts** (at time t the scaled runners sit where the old ones sit 
 So Poliakova's 95-runner configuration on 2, 4, ..., 192 gives 95-runner configurations on the
 multiples of 4 and of 6 up to 96 m.
 
-A fact used by routes 15 and 16: **k runners that cover at radius 1/(n+1) give a counterexample
+A fact used by routes 15 to 17: **k runners that cover at radius 1/(n+1) give a counterexample
 for n whenever k <= n**, because extra runners at shift 0 only add arcs. So deleting d runners
 from a k-runner cover is enough for n = k - d if the survivors, possibly re-tuned, still cover
 at the larger radius 1/(k - d + 1).
+
+A fact used by route 17, with its proof: **for a fixed chain of arcs, the best overlap margin is
+a minimum cycle mean.** Runner i, lift k covers ((k - s_i - R)/v_i, (k - s_i + R)/v_i). With
+x_i = s_i / v_i, the two overlaps of consecutive chain arcs A, B are c1 - x_A + x_B and
+c2 - x_B + x_A with c1, c2 independent of the shifts, so "every overlap >= eps" is a system of
+difference constraints. It is feasible iff the constraint graph with weights c - eps has no
+negative cycle, so the largest eps is the minimum cycle mean of the weights c.
 
 ## What is here
 
@@ -95,8 +104,9 @@ at the larger radius 1/(k - d + 1).
 | `rule_search_g.py`, `test_rules_g.py`, `fetch_deps_g.py`, `PREREG_rules_g.md`, `RESULTS_rules_g.md` | route 13: exact fixed-n search for a 94-runner counterexample (CEGAR over time points, CP-SAT) |
 | `rule_search_h.py`, `test_rules_h.py`, `PREREG_rules_h.md`, `RESULTS_rules_h.md` | route 13b: the same question with an incremental SAT solver (graded: failed its sanity tier) |
 | `rule_search_i.py`, `test_rules_i.py`, `PREREG_rules_i.md`, `RESULTS_rules_i.md` | route 14: fixed-n CP-SAT searches at smooth N inside 58..94 with a scaled Poliakova hint (graded) |
-| `descent_j.py`, `test_descent_j.py`, `PREREG_rules_j.md`, `RESULTS_rules_j.md` | route 15: delete from or add to the known 63- and 95-runner covers, every shift re-tuned on a grid (interim) |
-| `descent_k.py`, `test_descent_k.py`, `PREREG_rules_k.md` | route 16: the same neighbours, continuous best-response shifts, speed swaps and kicks |
+| `descent_j.py`, `test_descent_j.py`, `PREREG_rules_j.md`, `RESULTS_rules_j.md` | route 15: delete from or add to the known 63- and 95-runner covers, every shift re-tuned on a grid (graded) |
+| `descent_k.py`, `test_descent_k.py`, `PREREG_rules_k.md`, `RESULTS_rules_k.md` | route 16: the same neighbours, continuous best-response shifts, speed swaps and kicks (interim) |
+| `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md` | route 17: exact one-added-runner decision for Callens's cover; exact max-margin polish (minimum cycle mean) of near-covers |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -111,11 +121,12 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_descent_j test_descent_k test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_rules_i test_descent_j test_descent_k test_polish_l test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
 pip install ortools && python descent_j.py --out-dir out --minutes 120
 python descent_k.py --out-dir out --minutes 120   # standard library only
+python polish_l.py --out-dir out --minutes 120    # standard library only
 ```
 
 ## Credit
@@ -123,15 +134,17 @@ python descent_k.py --out-dir out --minutes 120   # standard library only
 The shifted conjecture's first counterexamples and the exact values of gamma_sh(1..n),
 including the n = 5 and n = 11 configurations route 9 starts from, are Blanco, Criado and
 Santos's. The counterexamples for 18..54 are aadrianvv's, and so are the ideas of warm chains,
-speed changes, grid-cell annealing, an LP polish and rigid time shifts. Those for 55, 56 and 57
+speed changes, grid-cell annealing, an LP polish (which route 17 makes exact) and rigid time
+shifts. Those for 55, 56 and 57
 are tomdif's. The quantity E_n, the uniform-rule method, the 9 -> 8 rules and the result for
 n >= 95 are Poliakova's. The question is Zhang's. The m = 2 rule-search negatives that routes 11
 and 12 build on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structured patch, issue
 110). aadrianvv also ran the first fixed-n search on Poliakova's even base, the idea route 13
 extends, and listed bases of multiples of 3 or 6 as a direction to try (issue 110,
 2026-11-21), without reporting a result. The one-runner extension bound for n = 57 is
-F1Justin's (PR 850), and so is the idea of bounding extensions of a fixed cover (PR 1017).
+F1Justin's (PR 850), and so is the idea of bounding extensions of a fixed cover (PR 1017), which
+route 17's part A applies to Callens's cover.
 The n = 63 counterexample, the first inside 58..94, and the observation that its menu fails for
 N = 60..63 and 65..95 are Xavier Callens's (Zenodo 24051700 and 24132291; CC BY 4.0); routes 15
-and 16 start from his certificate `cert_n063.json`, and the choice of smooth N in routes 13b and
+to 17 start from his certificate `cert_n063.json`, and the choice of smooth N in routes 13b and
 14 follows from his work.
