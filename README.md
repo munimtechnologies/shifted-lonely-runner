@@ -16,30 +16,43 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 21:30 UTC)
+## Status (2026-11-27, 23:00 UTC)
 
-- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-27 about 21:20 UTC: the Zenodo
+- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-27 about 22:45 UTC: the Zenodo
   API, arXiv's newest listings and solved-conjectures pull requests (F1Justin's PR 850, merged,
   and PR 1017, open). Nothing claims a case in 58..62 or 64..94.
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f) was found
   on the same day as tomdif's; we count it as an independent certificate, not as a new case.
-- **Route 19, interim** ([RESULTS_rules_o.md](RESULTS_rules_o.md)). The exact fixed-N search
-  re-derives gain-1 rules at N = 96 (Poliakova's setting) and at N = 64 (Callens's n = 63),
-  even with shifts in halves of delta only. None of the 37 targets in the open range was decided
-  yet: each solver call minimised the rule size and ran to its time limit.
-- **Route 19b (new, pre-registered in [PREREG_rules_p.md](PREREG_rules_p.md)).** The same exact
-  search with a feasibility-only solver (`top_p.py`), resumed from route 19's classes.
+- **A smaller n = 63 cover** (`cover_n063_simple.json`, below). It touches 11 speeds of the
+  base where Callens's certificate touches 18. It is Poliakova's 9 -> 8 rule cut off at
+  2N = 128 by the top trick. n = 63 is Callens's case; this is a second certificate, not a new
+  case.
+- **Route 19 closed** ([RESULTS_rules_o.md](RESULTS_rules_o.md)): calibrated and sound, but 0 of
+  37 targets decided. **Route 19b, interim** ([RESULTS_rules_p.md](RESULTS_rules_p.md)): a
+  feasibility-only solver did not help. Almost every call on a target still ran out of time.
+- **Route 19c (new, pre-registered in [PREREG_rules_q.md](PREREG_rules_q.md)).** The same exact
+  search (`top_q.py`) in the small menu that both known gain-1 rules use (s0 in quarters, beta
+  in halves of delta). Targets: n = N - 1 for N = 59..95 and gain 2 at N = 64 and 96.
 - **Routes 15-18 closed** ([RESULTS_rules_j.md](RESULTS_rules_j.md),
   [RESULTS_rules_k.md](RESULTS_rules_k.md), [RESULTS_rules_l.md](RESULTS_rules_l.md),
   [RESULTS_rules_n.md](RESULTS_rules_n.md)). Local searches around Callens's and Poliakova's
   covers for n = 61, 62, 64 and 94 all ended at configurations that touch exactly. Every
-  blocking cycle is a pair of speeds summing to 2(n + 1), a rigid pair (below). Changing speeds
-  at the pair only moved the block to another rigid pair (n = 61: {22, 102} -> {2, 122}). Also
-  exact: no single added runner, of any speed, turns Callens's cover with its shifts fixed into
-  an n = 64 cover at radius 1/65.
+  blocking cycle is a pair of speeds summing to 2(n + 1), a rigid pair (below).
 - **Earlier routes** (2-14): see the table below and their RESULTS files. Independent re-check of
   the published 18..54 certificates: all 37 pass MV2's three exact checkers
   (`test_external_certs.py`, commit c702698).
+
+## A smaller n = 63 cover: Poliakova's 9 -> 8 rule with a top trick
+
+On the base 2, 4, ..., 128 at shift 0 (delta = 1/65): remove 8, 32 and 96; rephase 12, 24 and
+48 to 1/2 + delta/2, 16 to -3 delta/2, 64 to -delta and 128 to +delta; add 3 and 9 at 3/4.
+These 63 runners' open arcs of radius 1/64 cover the circle (`test_cover_n063_simple.py`: a
+fresh Fraction endpoint checker, both checkers of `slr.py`, `top_q.indep_cover` and the fixed-N
+criterion all accept it). Compare Poliakova's 9 -> 8 rule, which works for every N >= 96: remove
+8, 32 and 192; rephase 12, 24, 48 and 96 to 1/2 + delta/2 and 16, 64 to -delta; add 3 and 9 at
+1/4. At N = 64 there is no 192. 96 is removed instead of rephased, 128 at +delta takes over
+the top, and the slack between delta and 1/64 closes what is left. Route 19b's search found it
+from scratch in 8 s (sanity tier ph64).
 
 ## How Callens's n = 63 cover works: a top trick
 
@@ -86,11 +99,17 @@ cover at radius r = rho/(N + 1), rho >= 1, if and only if, for every touched q, 
 some runner (speed w, shift s0 + beta/(N + 1)) and integer J satisfy
 |(x - J)(N + 1) + (w/q) z + beta| <= rho with x = (w/q) k + s0.
 
+**Endpoint criterion** (`top_q.indep_cover`): finitely many open arcs cover the circle if and
+only if every arc endpoint lies inside some arc. If a point is missed, the uncovered set is
+closed, non-empty and not the whole circle, so it has a boundary point, and that point is an
+arc endpoint.
+
 ## What is here
 
 | file | what it does |
 |---|---|
 | `certs_lp.json`, `test_certs_lp.py` | our n = 55 counterexample and its exact re-check by four checkers |
+| `cover_n063_simple.json`, `test_cover_n063_simple.py` | the smaller n = 63 cover and its exact re-check by four checkers |
 | `slr.py` | two independent exact certificate checkers (Fractions sweep; integer endpoint test) and the float search |
 | `test_slr.py` | standard-library tests; every expected value is proved by hand in a comment |
 | `job_slr.py`, `PREREG.md`, `RESULTS_gap.md` | route 1: direct search, n = 18..94 (certified 18-25, 27; not new) |
@@ -108,8 +127,9 @@ some runner (speed w, shift s0 + beta/(N + 1)) and integer J satisfy
 | `descent_k.py`, `test_descent_k.py`, `PREREG_rules_k.md`, `RESULTS_rules_k.md` | route 16: continuous best-response shifts, speed swaps and kicks (graded) |
 | `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md`, `RESULTS_rules_l.md` | route 17: exact one-added-runner decision; exact max-margin polish (graded) |
 | `climb_n.py`, `test_climb_n.py`, `PREREG_rules_n.md`, `RESULTS_rules_n.md` | route 18: climb of the exact margin; rigid-pair lemma (graded) |
-| `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (interim grade) |
-| `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md` | route 19b: route 19 with a feasibility-only solver, resumed from route 19's classes |
+| `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (graded, closed) |
+| `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (interim grade) |
+| `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
@@ -122,9 +142,9 @@ circle; then every time t has some runner closer than R to the origin, so with
 R <= 1/(n+1) the shifted conjecture fails for v.
 
 ```
-python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p
-pip install ortools && python -c "import top_p; print(top_p.probe_p(budget=3600))"
+python -m unittest -v test_certs_lp test_cover_n063_simple   # the n = 55 and n = 63 certificates
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q
+pip install ortools && python -c "import top_q; print(top_q.probe_q(budget=3600))"
 ```
 
 ## Credit
@@ -140,4 +160,4 @@ idea of bounding extensions of a fixed cover are F1Justin's (PR 850, PR 1017). T
 counterexample, the first inside 58..94, and the observation that its menu fails for N = 60..63
 and 65..95 are Xavier Callens's (Zenodo 24051700 and 24132291; CC BY 4.0); routes 15 to 19
 start from his certificate `cert_n063.json`. Route 19's reading of his cover as a rule with a
-top trick is ours.
+top trick, and the smaller n = 63 cover read as Poliakova's 9 -> 8 rule at N = 64, are ours.
