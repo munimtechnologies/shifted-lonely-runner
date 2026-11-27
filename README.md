@@ -5,8 +5,9 @@ Counterexamples are known for 5 <= n <= 17 (Blanco, Criado and Santos,
 [arXiv:2603.24784](https://arxiv.org/abs/2603.24784)), for 18 <= n <= 54 (aadrianvv with
 Claude, published 2026-11-22), for n = 55, 56 and 57 (tomdif, published 2026-11-25; all in
 [1337isnot1337/solved-conjectures](https://github.com/1337isnot1337/solved-conjectures/tree/main/results/shifted-lonely-runner-counterexamples),
-unrefereed; 18..57 Lean-checked there in PR 755), and for n >= 95 (Poliakova,
-[arXiv:2609.23952](https://arxiv.org/abs/2609.23952)). Counterexamples for the remaining cases
+unrefereed; 18..57 Lean-checked there in PR 755), for n = 63 (Callens,
+[Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 2026-11-08, unrefereed) and for
+n >= 95 (Poliakova, [arXiv:2609.23952](https://arxiv.org/abs/2609.23952)). Counterexamples for the remaining cases
 would answer the first part of Zhang's question
 ([arXiv:2608.13599](https://arxiv.org/abs/2608.13599), Question 8.5) of whether it fails for
 every n >= 5. This repository searches for them and checks every candidate exactly.
@@ -15,22 +16,29 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-26, 16:50 UTC)
+## Status (2026-11-27, 01:10 UTC)
 
-- **Open: 58 <= n <= 94** (checked 2026-11-26 about 16:20 UTC: solved-conjectures issue 110
-  and its pull requests, including F1Justin's open PR 850 on one-runner extensions of the
-  57-runner configuration; the arXiv listing newest first).
+- **Open: 58 <= n <= 62 and 64 <= n <= 94.** **n = 63 is not open:** Xavier Callens
+  (SocrateAI Lab) deposited [an exact counterexample at n = 63](https://doi.org/10.5281/zenodo.24051700)
+  on Zenodo on 8 November 2026 (a Poliakova-type move on 2, 4, ..., 128; gamma = 66/4225 < 1/64;
+  three exact checkers and a kernel-checked Lean statement, no human audit). Our status lines
+  from 24 to 26 November said "58..94 open"; that was wrong, because our searches had missed
+  Zenodo. Checked 2026-11-27 about 01:30 UTC: solved-conjectures issue 110 and its pull
+  requests (F1Justin's PR 850, merged 26 November, shows that the 57-runner configuration does
+  not extend to 58 by one added runner), the arXiv listing newest first, GitHub repositories
+  sorted by update, and the Zenodo API.
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f,
   E = +0.116) was found on the same day as tomdif's; we count it as an independent certificate,
   not as a new case.
-- **Route 13 (new, pre-registered in [PREREG_rules_g.md](PREREG_rules_g.md)).** An exact
-  search for one 94-runner counterexample on bases of multiples of 2, 3, 4 and 6. It is decided
-  by CEGAR over time points with the open cover at radius 1/95, which is weaker than any uniform
-  rule.
+- **Route 13b (new, pre-registered in [PREREG_rules_h.md](PREREG_rules_h.md)).** Fixed-n
+  searches at smooth N inside the open range (n = 59, 62, 71, 79, 80, 89) on bases of multiples
+  of 3, 4 and 6, plus route 13's n = 94 tiers, decided with an incremental SAT solver and mirror
+  clauses, tiers taking turns. Re-finding Callens's n = 63 in our menu is a second check.
+- **Route 13, interim** ([RESULTS_rules_g.md](RESULTS_rules_g.md)). The sanity tier found
+  Poliakova's rule; the control and the m = 6 target stayed undecided under CP-SAT.
 - **Route 12 graded** ([RESULTS_rules_f.md](RESULTS_rules_f.md)). With Poliakova's whole rule
   kept, **no extension in menu A gives gain 2 at the same top**, on bases of multiples of 2, 4
   or 6 (CP-SAT INFEASIBLE). So thirds, quarters and sixths do not double her gadget in place.
-  Finishing the gadget below its top is still undecided.
 - **Route 11c** ([PREREG_rules_e.md](PREREG_rules_e.md), interim grading in
   [RESULTS_rules_e.md](RESULTS_rules_e.md)). For each finite menu, no gain-1 rule has all its
   touched speeds at or below the frontier: 72 for c2neg, 32 for c4A58, 36 for c6A58.
@@ -63,7 +71,8 @@ multiple of q or of q/2 = m j/2, so a multiple of m: a base speed, not an added 
 | `rule_search_d.py`, `test_rules_d.py`, `job_rules_d.py`, `fetch_deps_d.py`, `PREREG_rules_d.md` | route 11b: the same search in feasibility mode, with caps and an m = 6 sanity tier |
 | `rule_search_e.py`, `test_rules_e.py`, `job_rules_e.py`, `fetch_deps_e.py`, `PREREG_rules_e.md`, `RESULTS_rules_e.md` | route 11c: cubes by the largest touched speed, mirror symmetry broken, cubes in parallel |
 | `rule_search_f.py`, `test_rules_f.py`, `fetch_deps_f.py`, `PREREG_rules_f.md`, `RESULTS_rules_f.md` | route 12: Poliakova's gadget fixed, the rest searched with thirds, quarters and sixths (graded) |
-| `rule_search_g.py`, `test_rules_g.py`, `fetch_deps_g.py`, `PREREG_rules_g.md` | route 13: exact fixed-n search for a 94-runner counterexample (CEGAR over time points) |
+| `rule_search_g.py`, `test_rules_g.py`, `fetch_deps_g.py`, `PREREG_rules_g.md`, `RESULTS_rules_g.md` | route 13: exact fixed-n search for a 94-runner counterexample (CEGAR over time points, CP-SAT) |
+| `rule_search_h.py`, `test_rules_h.py`, `PREREG_rules_h.md` | route 13b: the same question with an incremental SAT solver (PySAT), mirror clauses, tiers in parallel |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search with exact Fraction check; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints, speed swaps, rigid time shifts; n = 55 |
@@ -78,10 +87,10 @@ R <= 1/(n+1) the shifted conjecture fails for v. In `certs_lp.json` the shifts a
 
 ```
 python -m unittest -v test_certs_lp           # the n = 55 counterexample, seconds
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_rules_d test_rules_e test_rules_f test_rules_g test_rules_h test_slr_br test_slr_sbr test_slr_lp test_slr_chain test_slr_grid test_slr_consec
 python -m unittest -v test_slr_br_gap        # n = 18, 19, 20; a few minutes
 python -m unittest -v test_external_certs    # needs network
-pip install "ortools>=9.10" && python rule_search_g.py --out-dir out --minutes 120
+pip install --pre python-sat && python rule_search_h.py --out-dir out --minutes 120
 ```
 
 ## Credit
@@ -95,4 +104,7 @@ n >= 95 are Poliakova's. The question is Zhang's. The m = 2 rule-search negative
 and 12 build on are tomdif's (`rule3.py`, `rule4.py`) and aadrianvv's (structured patch, issue
 110). aadrianvv also ran the first fixed-n search on Poliakova's even base, the idea route 13
 extends, and listed bases of multiples of 3 or 6 as a direction to try (issue 110,
-2026-11-21), without reporting a result.
+2026-11-21), without reporting a result. The one-runner extension bound for n = 57 is
+F1Justin's (PR 850). The n = 63 counterexample, the first inside 58..94, and the observation
+that its menu fails for N = 60..63 and 65..95 are Xavier Callens's (Zenodo 24051700 and
+24132291); route 13b's choice of smooth N follows from it.
