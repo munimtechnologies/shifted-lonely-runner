@@ -1,0 +1,27 @@
+{
+ "what": "A counterexample to the shifted Lonely Runner Conjecture for n = 79 runners: the open arcs {t : ||v_i t + s_i|| < 1/80} of these 79 runners cover the circle R/Z, so at every time some runner is closer than 1/(n+1) = 1/80 to the origin.",
+ "n": 79,
+ "R": "1/80",
+ "how_found": "Route 19d (PREREG_rules_r.md), pre-registered target tier r80: base speeds 2, 4, ..., 160 at shift 0 (N = 80, delta = 1/81), edited by a gain-1 rule in menu q with 5-smooth speeds. Found by the exact CEGAR search (top_p.cegar_p) in gate probe R4, 2026-11-28 03:43 UTC, and accepted there by the fixed-N criterion and three global exact checkers (slr.covers_sweep, slr.covers_endpoints, top_q.indep_cover).",
+ "rule": {
+  "m": 2,
+  "N": 80,
+  "removed": [4, 16, 20, 40, 96, 120],
+  "rephased": {"8": ["0", "-1"], "12": ["1/2", "1/2"], "24": ["1/2", "1/2"], "32": ["0", "-3/2"], "48": ["1/2", "1/2"], "60": ["1/2", "1/2"], "80": ["0", "-1"], "160": ["0", "1"]},
+  "added": {"3": ["1/4", "0"], "5": ["1/4", "1/2"], "9": ["1/4", "0"], "15": ["1/4", "0"], "45": ["1/4", "0"]},
+  "shift_rule": "a rephased or added runner [s0, beta] has shift s0 + beta/81 (mod 1); every other runner of the base has shift 0"
+ },
+ "runners": [
+  [2, "0"], [3, "1/4"], [5, "83/324"], [6, "0"], [8, "80/81"], [9, "1/4"], [10, "0"], [12, "41/81"], [14, "0"], [15, "1/4"],
+  [18, "0"], [22, "0"], [24, "41/81"], [26, "0"], [28, "0"], [30, "0"], [32, "53/54"], [34, "0"], [36, "0"], [38, "0"],
+  [42, "0"], [44, "0"], [45, "1/4"], [46, "0"], [48, "41/81"], [50, "0"], [52, "0"], [54, "0"], [56, "0"], [58, "0"],
+  [60, "41/81"], [62, "0"], [64, "0"], [66, "0"], [68, "0"], [70, "0"], [72, "0"], [74, "0"], [76, "0"], [78, "0"],
+  [80, "80/81"], [82, "0"], [84, "0"], [86, "0"], [88, "0"], [90, "0"], [92, "0"], [94, "0"], [98, "0"], [100, "0"],
+  [102, "0"], [104, "0"], [106, "0"], [108, "0"], [110, "0"], [112, "0"], [114, "0"], [116, "0"], [118, "0"], [122, "0"],
+  [124, "0"], [126, "0"], [128, "0"], [130, "0"], [132, "0"], [134, "0"], [136, "0"], [138, "0"], [140, "0"], [142, "0"],
+  [144, "0"], [146, "0"], [148, "0"], [150, "0"], [152, "0"], [154, "0"], [156, "0"], [158, "0"], [160, "1/81"]
+ ],
+ "check": "python verify_cover.py cover_n079.json (standard library only)",
+ "by": "MV2, Munim, Inc., mv2@munimtech.com. Made with AI agents working in MV2's name; no human expert has checked it yet.",
+ "license": "CC BY 4.0"
+}

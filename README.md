@@ -6,7 +6,8 @@ Counterexamples are known for 5 <= n <= 17 (Blanco, Criado and Santos,
 Claude, published 2026-11-22), for n = 55, 56 and 57 (tomdif, published 2026-11-25; all in
 [1337isnot1337/solved-conjectures](https://github.com/1337isnot1337/solved-conjectures/tree/main/results/shifted-lonely-runner-counterexamples),
 unrefereed; 18..57 Lean-checked there in PR 755), for n = 63 (Callens,
-[Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 2026-11-08, unrefereed) and for
+[Zenodo 24051700](https://doi.org/10.5281/zenodo.24051700), 2026-11-08, unrefereed), for
+**n = 79 (this repository, 2026-11-28, `cover_n079.json`, unrefereed)** and for
 n >= 95 (Poliakova, [arXiv:2609.23952](https://arxiv.org/abs/2609.23952)). Counterexamples for the remaining cases
 would answer the first part of Zhang's question
 ([arXiv:2608.13599](https://arxiv.org/abs/2608.13599), Question 8.5) of whether it fails for
@@ -16,34 +17,35 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-28, 03:40 UTC)
+## Status (2026-11-28, 07:00 UTC)
 
-- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-28 about 03:25 UTC: the Zenodo
-  API (same four "shifted lonely runner" records; 73 "lonely runner" records), arXiv's newest
-  listings (newest 2610.40694), solved-conjectures pull requests (F1Justin's PR 1017, open) and
-  F1Justin's MathLab repository. Nothing claims a case in 58..62 or 64..94.
-- **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f) was found
-  on the same day as tomdif's; we count it as an independent certificate, not as a new case.
+- **New case: n = 79** ([RESULTS_n079.md](RESULTS_n079.md)). 79 runners with speeds up to 160
+  whose open arcs of radius 1/80 cover the circle: the even base 2, ..., 160 with 4, 16, 20, 40,
+  96, 120 removed, 8 speeds rephased and 3, 5, 9, 15, 45 added at about 1/4. Found by route 19d's
+  pre-registered target r80 (5-smooth speeds) and re-checked by four exact checkers
+  (`test_cover_n079.py`; stand-alone: `python verify_cover.py cover_n079.json`). Prior work
+  re-checked 2026-11-28 06:45-06:55 UTC (Zenodo API, arXiv, solved-conjectures pull requests,
+  F1Justin's MathLab, web): nothing claims n = 79.
+- **Open now: 58 <= n <= 62, 64 <= n <= 78 and 80 <= n <= 94.**
 - **Route 19c graded and confirmed** ([RESULTS_rules_q.md](RESULTS_rules_q.md)). In the small
   menu that contains both known gain-1 constructions (s0 in quarters, beta in halves of delta,
   3-smooth speeds), the exact search decided 38 of 40 targets, **all INFEASIBLE**: no gain-1
-  rule at any N in 59..95 except 64, and no gain-2 rule at N = 64 or 96. Route 19d's probe
-  printed route 19c's final state (no BUG; the six cut-off tokens all INFEASIBLE), and the
-  clause-soundness test passed. That is a negative for that menu only, not for any n.
+  rule at any N in 59..95 except 64, and no gain-2 rule at N = 64 or 96. That is a negative for
+  that menu only. Letting the prime 5 in (route 19d) gives the n = 79 rule at N = 80.
   Callens (a narrow menu INFEASIBLE for n = 39..93 except 81, which misses his own n = 63
   cover; his wider menus were UNKNOWN) and F1Justin's MathLab
   (N = 59 and 91..95, no control reported) had reported finite-menu negatives of their own.
-  What is new here is a menu that re-finds both known constructions and is still INFEASIBLE
-  everywhere else in 59..95, and the gain-2 cases.
 - **Route 19d running** ([PREREG_rules_r.md](PREREG_rules_r.md),
-  [RESULTS_rules_r.md](RESULTS_rules_r.md), interim). The same search with 5-smooth speeds. Its
-  sanity tier found a third n = 63 cover (`test_cover_r64.py`; not a new case). No target is
-  decided yet: with 5-smooth speeds a solver call often outlasts the 60 s per-turn cap, and a
-  cut-off call adds nothing, so probes R4-R6 use longer caps (procedural change, explained there).
+  [RESULTS_rules_r.md](RESULTS_rules_r.md), interim). The same search with 5-smooth speeds.
+  Target r80 FOUND (n = 79); sanity tier r64 FOUND a third n = 63 cover (`test_cover_r64.py`);
+  r60, r75, r90, r72, r81 and the gain-2 tiers are running, plus r80g2 (n = 78), added after r80
+  was found.
 - **A smaller n = 63 cover** (`cover_n063_simple.json`, below). It touches 11 speeds of the
   base where Callens's certificate touches 18. It is Poliakova's 9 -> 8 rule cut off at
   2N = 128 by the top trick. n = 63 is Callens's case; this is a second certificate, not a new
   case.
+- **Our n = 55** (`certs_lp.json`, commit 9276b4f) was found on the same day as tomdif's; we
+  count it as an independent certificate, not as a new case.
 - **Routes 19 and 19b closed** ([RESULTS_rules_o.md](RESULTS_rules_o.md),
   [RESULTS_rules_p.md](RESULTS_rules_p.md)). In the large menu x almost every solver call ran
   out of time.
@@ -55,6 +57,16 @@ checked them yet.
 - **Earlier routes** (2-14): see the table below and their RESULTS files. Independent re-check of
   the published 18..54 certificates: all 37 pass MV2's three exact checkers
   (`test_external_certs.py`, commit c702698).
+
+## The n = 79 counterexample
+
+On the base 2, 4, ..., 160 at shift 0 (N = 80, delta = 1/81): remove 4, 16, 20, 40, 96 and 120;
+rephase 8 and 80 to -delta, 32 to -3 delta/2, 160 to +delta, and 12, 24, 48, 60 to
+1/2 + delta/2; add 3, 9, 15, 45 at 1/4 and 5 at 1/4 + delta/2. That leaves 80 - 6 + 5 = 79
+runners with distinct speeds, and their open arcs of radius 1/80 cover the circle. As in the
+smaller n = 63 cover, the top speed 2N sits at +delta; unlike any earlier rule, it uses speeds
+divisible by 5 (20, 40, 60, 80, 120, 160 and the added 5, 15, 45). By the fixed-N criterion it
+even covers with closed arcs of radius 128/10241, a little below 1/80.
 
 ## A smaller n = 63 cover: Poliakova's 9 -> 8 rule with a top trick
 
@@ -118,10 +130,15 @@ only if every arc endpoint lies inside some arc. If a point is missed, the uncov
 closed, non-empty and not the whole circle, so it has a boundary point, and that point is an
 arc endpoint.
 
+**Interval sweep** (`verify_cover.py`): runner i is closer than R to the integer j exactly for t
+in the open interval ((j - s_i - R)/v_i, (j - s_i + R)/v_i); sorting these and sweeping from 0
+decides exactly whether they cover [0, 1].
+
 ## What is here
 
 | file | what it does |
 |---|---|
+| `cover_n079.json`, `verify_cover.py`, `test_cover_n079.py` | the n = 79 counterexample, a stand-alone exact checker, and its re-check by four checkers |
 | `certs_lp.json`, `test_certs_lp.py` | our n = 55 counterexample and its exact re-check by four checkers |
 | `cover_n063_simple.json`, `test_cover_n063_simple.py` | the smaller n = 63 cover and its exact re-check by four checkers |
 | `test_cover_r64.py` | a third n = 63 cover (route 19d's sanity tier) and its exact re-check |
@@ -145,7 +162,7 @@ arc endpoint.
 | `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (graded, closed) |
 | `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (closed) |
 | `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md`, `RESULTS_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker (graded: 38 of 40 INFEASIBLE) |
-| `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md`, `RESULTS_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers (running) |
+| `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md`, `RESULTS_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers (running; found n = 79) |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
@@ -158,7 +175,8 @@ circle; then every time t has some runner closer than R to the origin, so with
 R <= 1/(n+1) the shifted conjecture fails for v.
 
 ```
-python -m unittest -v test_certs_lp test_cover_n063_simple test_cover_r64   # the n = 55 and n = 63 certificates
+python verify_cover.py cover_n079.json                                       # stand-alone, standard library
+python -m unittest -v test_cover_n079 test_certs_lp test_cover_n063_simple test_cover_r64
 python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q test_top_r
 pip install ortools && python -c "import top_r; print(top_r.probe_r(budget=3600))"
 ```
@@ -178,4 +196,5 @@ first fixed-K finite-menu negatives, at K = 59 and 91..95 (MathLab). The n = 63
 counterexample, the first inside 58..94, and the observation that its menu fails for N = 60..63
 and 65..95 are Xavier Callens's (Zenodo 24051700 and 24132291; CC BY 4.0); routes 15 to 19
 start from his certificate `cert_n063.json`. Route 19's reading of his cover as a rule with a
-top trick, and the smaller n = 63 cover read as Poliakova's 9 -> 8 rule at N = 64, are ours.
+top trick, the smaller n = 63 cover read as Poliakova's 9 -> 8 rule at N = 64, and the n = 79
+counterexample are ours.

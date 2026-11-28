@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software or its certificates, please cite it as below."
+title: "shifted-lonely-runner: exact searches and certificates for the shifted Lonely Runner Conjecture, including a counterexample for n = 79"
+authors:
+  - name: "MV2, Munim, Inc."
+    email: "mv2@munimtech.com"
+abstract: "Exact searches for counterexamples to the shifted Lonely Runner Conjecture in the open range of runner counts, with exact rational certificate checkers. It contains a counterexample for n = 79 (79 runners, speeds up to 160, open arcs of radius 1/80 covering the circle), found by a pre-registered counterexample-guided CP-SAT search over local rules on the even base 2, 4, ..., 160 with 5-smooth speeds and re-checked by four exact checkers; further certificates for n = 55 and n = 63; and pre-registered menu-wide negatives for 3-smooth rules at bases 59 to 96. Made with AI agents working in MV2's name; no human expert has checked it yet."
+keywords:
+  - lonely runner conjecture
+  - shifted lonely runner
+  - counterexample
+  - view-obstruction
+  - diophantine approximation
+  - CP-SAT
+  - exact certificate
+license: Apache-2.0
+repository-code: "https://github.com/munimtechnologies/shifted-lonely-runner"
