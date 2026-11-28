@@ -50,3 +50,35 @@ n = 62, 69 and 83.
 
 No tier, menu, radius, clause builder or checker of routes 19c/19d is changed. Route 19d's tiers
 keep their state in their own cache (mv2-slr-r1, read only here, for seeds).
+
+## Addendum 1 (2026-11-28, about 10:50 UTC): a long-cap run next to the gate probes
+
+Written after gate probes T1 and T2 and before any long-cap solver call. What T1 and T2 showed:
+t63 ended UNKNOWN after one 440 s turn (2 solver iterations, 252 classes, seeded with 165 from
+route 19d), and t70 ended UNKNOWN after one turn (3 iterations, 266 classes, 87 seeded). Probe T3
+(t84) was filed but did not run in that publish window. At about 150-210 s per solver call, the
+gate's one turn per probe will not decide these tiers within T8.
+
+So the same search also runs in `long_run.py`, on a machine that can run for many hours:
+
+- Same CEGAR (`top_p.cegar_p`), same menu q, same clauses, slack radius and fixed-N check, same
+  four exact checks of any FOUND (`top_q.full_cert` and `verify_cover.first_gap` through
+  `probe_t_lib.stand_alone`). Only the per-turn cap changes: 3600 s instead of 440 s, with 3
+  solver workers.
+- Each tier resumes from the classes the gate probes collected (copies of mv2-slr-t1 and
+  mv2-slr-r1). A class id is valid in any run at the same N and gain, so a resumed INFEASIBLE
+  means the same as one from scratch.
+- Tiers, fewest long turns first: t63, t70, t84, t80 (sanity), then route 19d's undecided tiers
+  whose top speed 2N is 5-smooth: r80g2 (n = 78, the tier probe R7 added outside route 19d's
+  pre-registration), r60, r75, r90, r72, r81.
+- Grading: T-R1, T-R2 and T-R3 are graded on whatever the gate probes and the long run decide
+  together, reported separately. **T-R4 is graded on the gate probes alone**, as written; the
+  long run is reported next to it and does not turn a No into a Yes. Route 19d's R-R1 to R-R5
+  keep their own pre-registered windows; any long-run decision of a route-19d tier is reported
+  as outside that window.
+- A FOUND for an open n is published only after a fresh prior-work check, as cover_nXXX.json
+  with its own committed test, as in T-R2.
+
+Prediction for the long run, written now: at least one of t63, t70, t84 is decided (FOUND or
+INFEASIBLE) within 20 hours of long run: **Yes** (55%). Any new case found (one of n = 62, 69,
+83, 78, 59, 74, 89, 71, 80): **No** (15% yes).

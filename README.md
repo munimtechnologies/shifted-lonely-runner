@@ -17,21 +17,25 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-28, 09:15 UTC)
+## Status (2026-11-28, 11:00 UTC)
 
 - **New case: n = 79** ([RESULTS_n079.md](RESULTS_n079.md)). 79 runners with speeds up to 160
   whose open arcs of radius 1/80 cover the circle: the even base 2, ..., 160 with 4, 16, 20, 40,
   96, 120 removed, 8 speeds rephased and 3, 5, 9, 15, 45 added at about 1/4. Found by route 19d's
   pre-registered target r80 (5-smooth speeds) and re-checked by four exact checkers
   (`test_cover_n079.py`; stand-alone: `python verify_cover.py cover_n079.json`). Prior work
-  re-checked 2026-11-28 06:45-06:55 UTC and again 08:45-09:00 UTC (Zenodo API, arXiv,
-  solved-conjectures pull requests, F1Justin's MathLab, web): nothing claims n = 79.
+  re-checked 2026-11-28 06:45-06:55 UTC, 08:45-09:00 UTC and 10:40-10:55 UTC (Zenodo API,
+  arXiv, solved-conjectures pull requests, F1Justin's MathLab, web): nothing claims n = 79.
   Dropping any one of its 79 runners (shifts kept) leaves a gap at radius 1/79, so it does not
   give n = 78 by deletion ([RESULTS_rules_r.md](RESULTS_rules_r.md), probe R7).
 - **Open now: 58 <= n <= 62, 64 <= n <= 78 and 80 <= n <= 94.**
-- **Route 19e pre-registered** ([PREREG_rules_t.md](PREREG_rules_t.md)). The same exact search
+- **Route 19e running** ([PREREG_rules_t.md](PREREG_rules_t.md)). The same exact search
   with 7-smooth speeds at the three bases where 7 first makes the top speed 2N touchable:
-  N = 63, 70, 84 (n = 62, 69, 83), with sanity tier t80.
+  N = 63, 70, 84 (n = 62, 69, 83), with sanity tier t80. Gate probes T1 (t63) and T2 (t70)
+  each ended UNKNOWN after one 440 s turn (2 and 3 solver iterations). Addendum 1 adds
+  `long_run.py`, which runs the same search with caps of an hour per turn on a machine that can
+  run for many hours, together with route 19d's undecided tiers; the meaning of FOUND and
+  INFEASIBLE does not change.
 - **Route 19d graded in part** ([PREREG_rules_r.md](PREREG_rules_r.md),
   [RESULTS_rules_r.md](RESULTS_rules_r.md)). The same search with 5-smooth speeds. Target r80
   FOUND (n = 79), against our own 5% forecast (R-R5 Yes, R-R4 No); only one of 38 targets was
@@ -169,7 +173,7 @@ decides exactly whether they cover [0, 1].
 | `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (closed) |
 | `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md`, `RESULTS_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker (graded: 38 of 40 INFEASIBLE) |
 | `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md`, `RESULTS_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers (found n = 79; partly graded) |
-| `PREREG_rules_t.md` | route 19e: menu q with 7-smooth speeds at N = 63, 70, 84 (pre-registered; probes run in the publish gate) |
+| `probe_t_lib.py`, `long_run.py`, `test_long_run.py`, `PREREG_rules_t.md` | route 19e: menu q with 7-smooth speeds at N = 63, 70, 84 (pre-registered); gate probes, and a resumable long-cap driver for routes 19d and 19e (Addendum 1) |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
@@ -184,8 +188,8 @@ R <= 1/(n+1) the shifted conjecture fails for v.
 ```
 python verify_cover.py cover_n079.json                                       # stand-alone, standard library
 python -m unittest -v test_cover_n079 test_certs_lp test_cover_n063_simple test_cover_r64
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q test_top_r
-pip install ortools && python -c "import top_r; print(top_r.probe_r(budget=3600))"
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q test_top_r test_long_run
+pip install ortools && python long_run.py --out out_long --hours 20 --cap 3600 --workers 3
 ```
 
 ## Credit
