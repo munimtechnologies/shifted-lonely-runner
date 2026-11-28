@@ -16,23 +16,29 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-27, 23:00 UTC)
+## Status (2026-11-28, 00:45 UTC)
 
-- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-27 about 22:45 UTC: the Zenodo
-  API, arXiv's newest listings and solved-conjectures pull requests (F1Justin's PR 850, merged,
-  and PR 1017, open). Nothing claims a case in 58..62 or 64..94.
+- **Open: 58 <= n <= 62 and 64 <= n <= 94.** Re-checked 2026-11-28 about 00:30 UTC: the Zenodo
+  API, arXiv's newest listings, solved-conjectures pull requests (F1Justin's PR 1017, open) and
+  F1Justin's MathLab repository. Nothing claims a case in 58..62 or 64..94.
 - **No new case from this repository.** Our n = 55 (`certs_lp.json`, commit 9276b4f) was found
   on the same day as tomdif's; we count it as an independent certificate, not as a new case.
+- **Route 19c graded** ([RESULTS_rules_q.md](RESULTS_rules_q.md)). In the small menu that
+  contains both known gain-1 constructions (s0 in quarters, beta in halves of delta, 3-smooth
+  speeds), the exact search decided 38 of 40 targets, **all INFEASIBLE**. There is no gain-1
+  rule at any N in 59..95 except 64, and no gain-2 rule at N = 64 or 96. That is a negative
+  for that menu only, not for any n. Both sanity tiers re-found certified covers from scratch
+  (two new certificates for n = 63 and n = 95, not new cases).
+- **Route 19d (new, pre-registered in [PREREG_rules_r.md](PREREG_rules_r.md)).** The same
+  search with 5-smooth speeds (`top_r.py`), and a clause-soundness test. Every clause is
+  rebuilt for five certified covers, and none may be falsified.
 - **A smaller n = 63 cover** (`cover_n063_simple.json`, below). It touches 11 speeds of the
   base where Callens's certificate touches 18. It is Poliakova's 9 -> 8 rule cut off at
   2N = 128 by the top trick. n = 63 is Callens's case; this is a second certificate, not a new
   case.
-- **Route 19 closed** ([RESULTS_rules_o.md](RESULTS_rules_o.md)): calibrated and sound, but 0 of
-  37 targets decided. **Route 19b, interim** ([RESULTS_rules_p.md](RESULTS_rules_p.md)): a
-  feasibility-only solver did not help. Almost every call on a target still ran out of time.
-- **Route 19c (new, pre-registered in [PREREG_rules_q.md](PREREG_rules_q.md)).** The same exact
-  search (`top_q.py`) in the small menu that both known gain-1 rules use (s0 in quarters, beta
-  in halves of delta). Targets: n = N - 1 for N = 59..95 and gain 2 at N = 64 and 96.
+- **Routes 19 and 19b closed** ([RESULTS_rules_o.md](RESULTS_rules_o.md),
+  [RESULTS_rules_p.md](RESULTS_rules_p.md)). In the large menu x almost every solver call ran
+  out of time.
 - **Routes 15-18 closed** ([RESULTS_rules_j.md](RESULTS_rules_j.md),
   [RESULTS_rules_k.md](RESULTS_rules_k.md), [RESULTS_rules_l.md](RESULTS_rules_l.md),
   [RESULTS_rules_n.md](RESULTS_rules_n.md)). Local searches around Callens's and Poliakova's
@@ -128,8 +134,9 @@ arc endpoint.
 | `polish_l.py`, `test_polish_l.py`, `PREREG_rules_l.md`, `RESULTS_rules_l.md` | route 17: exact one-added-runner decision; exact max-margin polish (graded) |
 | `climb_n.py`, `test_climb_n.py`, `PREREG_rules_n.md`, `RESULTS_rules_n.md` | route 18: climb of the exact margin; rigid-pair lemma (graded) |
 | `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (graded, closed) |
-| `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (interim grade) |
-| `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker |
+| `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (closed) |
+| `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md`, `RESULTS_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker (graded: 38 of 40 INFEASIBLE) |
+| `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
@@ -143,8 +150,8 @@ R <= 1/(n+1) the shifted conjecture fails for v.
 
 ```
 python -m unittest -v test_certs_lp test_cover_n063_simple   # the n = 55 and n = 63 certificates
-python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q
-pip install ortools && python -c "import top_q; print(top_q.probe_q(budget=3600))"
+python -m unittest -v test_slr test_rules test_rules_m test_rules_s test_rules_c test_descent_j test_descent_k test_polish_l test_climb_n test_top_o test_top_p test_top_q test_top_r
+pip install ortools && python -c "import top_r; print(top_r.probe_r(budget=3600))"
 ```
 
 ## Credit
@@ -153,7 +160,8 @@ The shifted conjecture's first counterexamples and the exact values of gamma_sh(
 Blanco, Criado and Santos's. The counterexamples for 18..54 are aadrianvv's, and so are the
 ideas of warm chains, speed changes, grid-cell annealing, an LP polish and rigid time shifts.
 Those for 55, 56 and 57 are tomdif's. The quantity E_n, local rules, their locality proof, the
-9 -> 8 rules and the result for n >= 95 are Poliakova's. The question is Zhang's. The m = 2
+9 -> 8 rules and the result for n >= 95 are Poliakova's (F1Justin's MathLab reports a larger
+linear constant, E_n >= floor(n/125)). The question is Zhang's. The m = 2
 rule-search negatives that routes 11 and 12 build on are tomdif's (`rule3.py`, `rule4.py`) and
 aadrianvv's (structured patch, issue 110). The one-runner extension bound for n = 57 and the
 idea of bounding extensions of a fixed cover are F1Justin's (PR 850, PR 1017). The n = 63
