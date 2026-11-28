@@ -17,16 +17,27 @@ By MV2 of Munim, Inc. (mv2@munimtech.com). Code Apache-2.0; text and data CC BY 
 The code and text were made with AI agents working in MV2's name. No human expert has
 checked them yet.
 
-## Status (2026-11-28, 07:00 UTC)
+## Status (2026-11-28, 09:15 UTC)
 
 - **New case: n = 79** ([RESULTS_n079.md](RESULTS_n079.md)). 79 runners with speeds up to 160
   whose open arcs of radius 1/80 cover the circle: the even base 2, ..., 160 with 4, 16, 20, 40,
   96, 120 removed, 8 speeds rephased and 3, 5, 9, 15, 45 added at about 1/4. Found by route 19d's
   pre-registered target r80 (5-smooth speeds) and re-checked by four exact checkers
   (`test_cover_n079.py`; stand-alone: `python verify_cover.py cover_n079.json`). Prior work
-  re-checked 2026-11-28 06:45-06:55 UTC (Zenodo API, arXiv, solved-conjectures pull requests,
-  F1Justin's MathLab, web): nothing claims n = 79.
+  re-checked 2026-11-28 06:45-06:55 UTC and again 08:45-09:00 UTC (Zenodo API, arXiv,
+  solved-conjectures pull requests, F1Justin's MathLab, web): nothing claims n = 79.
+  Dropping any one of its 79 runners (shifts kept) leaves a gap at radius 1/79, so it does not
+  give n = 78 by deletion ([RESULTS_rules_r.md](RESULTS_rules_r.md), probe R7).
 - **Open now: 58 <= n <= 62, 64 <= n <= 78 and 80 <= n <= 94.**
+- **Route 19e pre-registered** ([PREREG_rules_t.md](PREREG_rules_t.md)). The same exact search
+  with 7-smooth speeds at the three bases where 7 first makes the top speed 2N touchable:
+  N = 63, 70, 84 (n = 62, 69, 83), with sanity tier t80.
+- **Route 19d graded in part** ([PREREG_rules_r.md](PREREG_rules_r.md),
+  [RESULTS_rules_r.md](RESULTS_rules_r.md)). The same search with 5-smooth speeds. Target r80
+  FOUND (n = 79), against our own 5% forecast (R-R5 Yes, R-R4 No); only one of 38 targets was
+  decided in the pre-registered window (R-R3 No), because each solver call takes minutes.
+  Sanity tier r64 FOUND a third n = 63 cover (`test_cover_r64.py`). r60, r75, r90, r72, r81,
+  the gain-2 tiers and r80g2 (n = 78, added after r80 was found) are undecided.
 - **Route 19c graded and confirmed** ([RESULTS_rules_q.md](RESULTS_rules_q.md)). In the small
   menu that contains both known gain-1 constructions (s0 in quarters, beta in halves of delta,
   3-smooth speeds), the exact search decided 38 of 40 targets, **all INFEASIBLE**: no gain-1
@@ -35,11 +46,6 @@ checked them yet.
   Callens (a narrow menu INFEASIBLE for n = 39..93 except 81, which misses his own n = 63
   cover; his wider menus were UNKNOWN) and F1Justin's MathLab
   (N = 59 and 91..95, no control reported) had reported finite-menu negatives of their own.
-- **Route 19d running** ([PREREG_rules_r.md](PREREG_rules_r.md),
-  [RESULTS_rules_r.md](RESULTS_rules_r.md), interim). The same search with 5-smooth speeds.
-  Target r80 FOUND (n = 79); sanity tier r64 FOUND a third n = 63 cover (`test_cover_r64.py`);
-  r60, r75, r90, r72, r81 and the gain-2 tiers are running, plus r80g2 (n = 78), added after r80
-  was found.
 - **A smaller n = 63 cover** (`cover_n063_simple.json`, below). It touches 11 speeds of the
   base where Callens's certificate touches 18. It is Poliakova's 9 -> 8 rule cut off at
   2N = 128 by the top trick. n = 63 is Callens's case; this is a second certificate, not a new
@@ -162,7 +168,8 @@ decides exactly whether they cover [0, 1].
 | `top_o.py`, `test_top_o.py`, `PREREG_rules_o.md`, `RESULTS_rules_o.md` | route 19: exact fixed-N criterion with the slack radius; complete CEGAR over 3-smooth menus for N = 59..96 (graded, closed) |
 | `top_p.py`, `test_top_p.py`, `PREREG_rules_p.md`, `RESULTS_rules_p.md` | route 19b: route 19 with a feasibility-only solver (closed) |
 | `top_q.py`, `test_top_q.py`, `PREREG_rules_q.md`, `RESULTS_rules_q.md` | route 19c: the same search in the small menu of the two known gain-1 rules; third exact checker (graded: 38 of 40 INFEASIBLE) |
-| `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md`, `RESULTS_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers (running; found n = 79) |
+| `top_r.py`, `test_top_r.py`, `PREREG_rules_r.md`, `RESULTS_rules_r.md` | route 19d: menu q with 5-smooth speeds; clause-soundness test on five certified covers (found n = 79; partly graded) |
+| `PREREG_rules_t.md` | route 19e: menu q with 7-smooth speeds at N = 63, 70, 84 (pre-registered; probes run in the publish gate) |
 | `slr_br.py`, `test_slr_br.py`, `test_slr_br_gap.py`, `job_br.py`, `PREREG_br.md`, `RESULTS_br.md` | route 4: best-response search; n = 18, 19, 20 certified (not new) |
 | `slr_sbr.py`, `test_slr_sbr.py`, `test_external_certs.py`, `PREREG_sbr.md`, `RESULTS_sbr.md` | route 5: best response over speed and shift; re-check of the published 18..54 certificates |
 | `slr_lp.py`, `test_slr_lp.py`, `PREREG_lp.md`, `RESULTS_lp.md` | route 6: minimax polish by difference constraints; n = 55 |
